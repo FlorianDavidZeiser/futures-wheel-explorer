@@ -1,0 +1,80 @@
+/*
+  Design-Token und museale Schichten.
+
+  Die Palette selbst wird zur Laufzeit aus styles/palettes.ts als CSS-Variablen
+  auf den Wurzel-Container gelegt (--bg, --ink, --glow und so weiter). Hier
+  liegen die unveraenderlichen Bausteine: die sepiahafte Patina und die Vignette,
+  die dem Stueck seine Vitrinen-Stimmung geben.
+*/
+
+:root {
+  /* Sichere Startwerte, bevor die erste Palette greift. */
+  --bg: #0a0e1a;
+  --bg-deep: #05070f;
+  --ink: #f1e6d0;
+  --ink-soft: #c9b89b;
+  --ink-faint: #8f805f;
+  --glow: #ffcf87;
+  --accent: #f2a94e;
+  --accent-soft: #7a5a2a;
+
+  --serif: 'Fraunces', 'Source Serif 4', 'Source Serif Pro', 'Iowan Old Style',
+    'Palatino Linotype', Georgia, Cambria, serif;
+  --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
+    Arial, sans-serif;
+}
+
+/*
+  Die vergilbte, museale Patina. Eine warme, sepiahafte Schicht, die ueber der
+  Szene liegt. Auf den historischen Stationen leicht, im Heute zuerst gar nicht,
+  und in der Wendung legt sie sich langsam und stetig darueber. Multiply laesst
+  die kalten Farben des Heute zu warmer, ferner Vergangenheit altern.
+*/
+.patina {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  background:
+    radial-gradient(120% 100% at 50% 0%, rgba(214, 178, 110, 0.55) 0%, rgba(150, 116, 60, 0.42) 45%, rgba(96, 70, 32, 0.62) 100%);
+}
+
+/* Eine zweite, ganz feine Koernung und Randverdunklung fuer das Alter. */
+.patina-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: soft-light;
+  background:
+    radial-gradient(140% 120% at 50% 30%, rgba(255, 240, 210, 0.08) 0%, rgba(40, 28, 12, 0.5) 100%);
+}
+
+/* Die Vignette der Vitrine. Liegt immer auf, ganz dezent. */
+.vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(130% 120% at 50% 42%, transparent 55%, rgba(0, 0, 0, 0.45) 100%);
+}
+
+/* Das warme Aufglimmen des Gaslichts beim Eingang. */
+@keyframes emberGlow {
+  0% { opacity: 0; transform: scale(0.6); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Sehr langsames, unterschwelliges Atmen fuer Lichtpunkte. */
+@keyframes softBreath {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
