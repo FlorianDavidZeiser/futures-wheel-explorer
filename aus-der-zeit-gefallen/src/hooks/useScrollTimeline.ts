@@ -48,10 +48,15 @@ export function useScrollTimeline({
         const span = Math.max(1, outer.offsetHeight - vh);
         if (r.top <= 0 && -r.top <= span) {
           const p = clamp(-r.top / span);
-          // Ruhig erst, dann spuerbar beschleunigend.
-          const climb = clamp(p / 0.78);
-          yearMV.set(lerp(turn.startYear, turn.endYear, Math.pow(climb, 2.2)));
-          patinaMV.set(Math.pow(clamp(p / 0.85), 1.2));
+          // Die Jahreszahl springt in Schritten, erst klein und nah, dann mit
+          // abnehmendem Abstand, sodass die Zeit spuerbar beschleunigt.
+          let yr: number = turn.sequence[0];
+          for (let i = 0; i < turn.stepStops.length; i++) {
+            if (p >= turn.stepStops[i]) yr = turn.sequence[i];
+          }
+          yearMV.set(yr);
+          // Die Patina legt sich langsam und stetig ueber den eigenen Beruf.
+          patinaMV.set(Math.pow(clamp(p / 0.9), 1.2));
           pinMV.set(p);
           hudOpacity.set(1);
           return;

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef } from 'react';
+import { Fragment, useCallback, useMemo, useRef } from 'react';
 import { motion, useMotionTemplate, useMotionValue, useTransform } from 'framer-motion';
 import { useExperience } from './state/ExperienceContext';
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion';
@@ -6,6 +6,7 @@ import { useScrollTimeline } from './hooks/useScrollTimeline';
 import { ARC_YEARS, arcStops } from './styles/palettes';
 import { stations, today } from './data/content';
 import { YearHud } from './components/ui/YearHud';
+import { Spacer } from './components/ui/Spacer';
 import { Intro } from './components/intro/Intro';
 import { StationSection } from './components/station/StationSection';
 import { TodaySection } from './components/today/TodaySection';
@@ -72,11 +73,20 @@ export function App() {
       <div key={runKey}>
         <Intro reduced={reduced} onBegin={handleBegin} />
 
+        {/* Ein erster Atemzug, bevor die Reise beginnt. */}
+        <Spacer height="62vh" />
+
         {stations.map((s, i) => (
-          <StationSection key={s.id} station={s} reduced={reduced} register={registrars[i]} />
+          <Fragment key={s.id}>
+            <StationSection station={s} reduced={reduced} register={registrars[i]} />
+            {/* Atemzug zwischen den Zeiten, nur die hochlaufende Jahreszahl. */}
+            <Spacer height="60vh" />
+          </Fragment>
         ))}
 
         <TodaySection reduced={reduced} register={registrars[stations.length]} />
+
+        <Spacer height="48vh" />
 
         <TurnSection ref={turnRef} reduced={reduced} patina={patinaMV} pin={pinMV} />
 
