@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useMemo, useRef } from 'react';
+import { Fragment, useEffect, useMemo, useRef } from 'react';
 import { motion, useMotionTemplate, useMotionValue, useTransform } from 'framer-motion';
 import { useExperience } from './state/ExperienceContext';
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion';
@@ -15,9 +15,10 @@ import { OutroSection } from './components/outro/OutroSection';
 
 // Die Buehne. Sie traegt den scroll-getriebenen Temperaturbogen und die
 // durchlaufende Jahreszahl ueber der durchgehenden, vertikalen Reise und ordnet
-// den linearen Ablauf.
+// den linearen Ablauf. Der Eingang liegt als getrenntes Overlay darueber, bis die
+// Reise begonnen hat.
 export function App() {
-  const { runKey } = useExperience();
+  const { runKey, started } = useExperience();
   const reduced = usePrefersReducedMotion();
 
   // Jahre der Stuetzpunkte, in DOM-Reihenfolge, vier Stationen und das Heute.
@@ -39,7 +40,6 @@ export function App() {
   const waypointRefs = useRef<(HTMLElement | null)[]>([]);
   const turnRef = useRef<HTMLDivElement>(null);
 
-  // Stabile Anmelder je Stuetzpunkt, damit sich die Szenen sauber eintragen.
   const registrars = useMemo(
     () => waypointYears.map((_, i) => (el: HTMLElement | null) => {
       waypointRefs.current[i] = el;
@@ -58,10 +58,13 @@ export function App() {
     runKey,
   });
 
-  const handleBegin = useCallback(() => {
-    if (typeof window === 'undefined') return;
-    window.scrollTo({ top: window.innerHeight, behavior: reduced ? 'auto' : 'smooth' });
-  }, [reduced]);
+  // Solange der Eingang offen ist, ruht die Reise dahinter, kein Scrollen.
+  useEffect(() => {
+    document.body.style.overflow = started ? '' : 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [started]);
 
   return (
     <>
@@ -70,11 +73,11 @@ export function App() {
 
       <YearHud value={yearRounded} opacity={hudOpacity} color={ink} />
 
-      <div key={runKey}>
-        <Intro reduced={reduced} onBegin={handleBegin} />
+      {!started && <Intro reduced={reduced} />}
 
-        {/* Ein erster Atemzug, bevor die Reise beginnt. */}
-        <Spacer height="62vh" />
+      <div key={runKey}>
+        {/* Ein erster Atemzug, bevor die erste Station kommt. */}
+        <Spacer height="72vh" />
 
         {stations.map((s, i) => (
           <Fragment key={s.id}>
@@ -86,7 +89,7 @@ export function App() {
 
         <TodaySection reduced={reduced} register={registrars[stations.length]} />
 
-        <Spacer height="48vh" />
+        <Spacer height="52vh" />
 
         <TurnSection ref={turnRef} reduced={reduced} patina={patinaMV} pin={pinMV} />
 

@@ -17,12 +17,13 @@ interface TurnSectionProps {
 
 // Die Wendung, der Klappmoment, der wichtigste Teil des Stuecks.
 //
-// Die fuenfte Station, im exakt gleichen Aufbau wie die historischen. Wo dort der
-// Welt-Einstieg stand, steht hier die Heute-Zeile. Wo dort das lebende Bild stand,
-// die leere Silhouette. Wo dort der Berufsname stand, der eigene Beruf. Ein hoher,
-// gepinnter Abschnitt, durch den sich das Scrollen zaeh zieht. Die Jahreszahl
-// laeuft ueber den Nutzer hinweg, die Patina legt sich, ein Fragezeichen blendet
-// langsam ein, dann, nach einer Stille, die Schlusszeile.
+// Die fuenfte Station, im exakt gleichen Aufbau und derselben Vitrinengroesse wie
+// die historischen. Wo dort der Welt-Einstieg stand, steht hier die Heute-Zeile.
+// Wo dort das lebende Bild stand, die leere Silhouette im gleichen Rahmen. Wo dort
+// der Berufsname stand, der eigene Beruf in derselben Serif. Ein sehr hoher,
+// gepinnter Abschnitt. Erst haelt alles ruhig bei 2026, dann laeuft die Jahreszahl
+// in Schritten ueber den Nutzer hinweg, die Patina legt sich, ein Fragezeichen
+// blendet ein. Bei 2070 ein Halt, eine Stille, dann die Schlusszeile.
 export const TurnSection = forwardRef<HTMLDivElement, TurnSectionProps>(function TurnSection(
   { reduced, patina, pin },
   ref
@@ -37,15 +38,16 @@ export const TurnSection = forwardRef<HTMLDivElement, TurnSectionProps>(function
   });
 
   // Das Fragezeichen blendet langsam ein, waehrend die Zeit klettert.
-  const markOpacity = useTransform(pin, [0.18, 0.7], [0, 1]);
-  // Die Schlusszeile erst nach der Stille, am Ende des gepinnten Abschnitts.
-  const closingOpacity = useTransform(pin, [0.93, 0.99], [0, 1]);
-  const closingY = useTransform(pin, [0.93, 0.99], [reduced ? 0 : 14, 0]);
+  const markOpacity = useTransform(pin, [0.2, 0.62], [0, 1]);
+  // Die Schlusszeile erst nach dem Halt und der Stille bei 2070.
+  const closingOpacity = useTransform(pin, [0.9, 0.98], [0, 1]);
+  const closingY = useTransform(pin, [0.9, 0.98], [reduced ? 0 : 14, 0]);
 
   return (
-    <div ref={ref} className="relative min-h-[480vh] w-full" style={paletteVars(palettes.today)}>
-      <div className="sticky top-0 flex min-h-[100svh] w-full flex-col items-center justify-center px-6 py-[10vh]">
-        {/* Step zwei. Der Nutzer wird zur Station, im gleichen Aufbau. */}
+    <div ref={ref} className="relative min-h-[600vh] w-full" style={paletteVars(palettes.today)}>
+      <div className="sticky top-0 flex min-h-[100svh] w-full flex-col items-center justify-center px-6 py-[8vh]">
+        {/* Die fuenfte Station, gleiche Abfolge wie die historischen. Heute-Zeile an
+            der Stelle des Welt-Einstiegs, darunter die Bildflaeche, darunter der Beruf. */}
         <motion.div
           variants={reveal(reduced)}
           initial="hidden"
@@ -53,8 +55,6 @@ export const TurnSection = forwardRef<HTMLDivElement, TurnSectionProps>(function
           viewport={{ once: true, amount: 0.3 }}
           className="flex w-full max-w-2xl flex-col items-center"
         >
-          {/* An der Stelle des Welt-Einstiegs, die Heute-Zeile. Sie bleibt klar,
-              waehrend ringsum alles altert. */}
           <p
             className="font-serif"
             style={{
@@ -70,7 +70,7 @@ export const TurnSection = forwardRef<HTMLDivElement, TurnSectionProps>(function
             {turn.todayLine}
           </p>
 
-          <div className="mt-[12vh] w-full">
+          <div className="mt-[8vh] w-full">
             <SceneFrame patina={patina}>
               <SilhouetteScene palette={palettes.today} reduced={reduced} />
             </SceneFrame>
@@ -78,12 +78,13 @@ export const TurnSection = forwardRef<HTMLDivElement, TurnSectionProps>(function
         </motion.div>
 
         <div className="flex w-full max-w-2xl flex-col items-center text-center">
+          {/* Der eigene Beruf, in derselben Serif und Groesse wie die historischen. */}
           <motion.h2
-            variants={reveal(reduced)}
-            initial="hidden"
-            whileInView="shown"
+            initial={{ opacity: 0, y: reduced ? 0 : 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.8 }}
-            className="mt-[12vh] font-serif"
+            transition={{ duration: reduced ? 0.4 : 1.2, ease: 'easeOut' }}
+            className="mt-[8vh] font-serif"
             style={{
               color: 'var(--ink)',
               fontSize: 'clamp(1.5rem, 3.4vw, 2.25rem)',
@@ -95,12 +96,8 @@ export const TurnSection = forwardRef<HTMLDivElement, TurnSectionProps>(function
             {name}
           </motion.h2>
 
-          {/* Die Stelle, wo bei den anderen die Andeutung stand. Ein langsam
-              einblendendes Fragezeichen. */}
-          <motion.p
-            style={{ opacity: markOpacity, filter: aged }}
-            className="mt-[6vh] font-serif"
-          >
+          {/* Die Stelle der Ablöse-Andeutung. Ein langsam einblendendes Fragezeichen. */}
+          <motion.p style={{ opacity: markOpacity, filter: aged }} className="mt-[6vh] font-serif">
             <span
               style={{
                 display: 'block',
@@ -114,7 +111,7 @@ export const TurnSection = forwardRef<HTMLDivElement, TurnSectionProps>(function
             </span>
           </motion.p>
 
-          {/* Step vier. Nach der Stille, die Schlusszeile. */}
+          {/* Nach dem Halt und der Stille, die Schlusszeile. */}
           <motion.p style={{ opacity: closingOpacity, y: closingY }}>
             <span
               style={{

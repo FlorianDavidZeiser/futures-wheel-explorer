@@ -17,21 +17,48 @@ const sceneFor: Record<StationId, (p: SceneProps) => JSX.Element> = {
   computer: HumanComputerScene,
 };
 
+// Teilt die Geschichte an einer natuerlichen Satzgrenze in zwei Teile, ohne den
+// Wortlaut zu veraendern. Die beiden Teile ergeben zusammengesetzt exakt das
+// Original. Geschnitten wird an der Satzgrenze, die der Mitte am naechsten liegt.
+function splitStory(story: string): [string, string] {
+  const boundaries: number[] = [];
+  for (let i = 0; i < story.length - 1; i++) {
+    if (story[i] === '.' && story[i + 1] === ' ') boundaries.push(i);
+  }
+  if (boundaries.length === 0) return [story, ''];
+  const mid = story.length / 2;
+  let best = boundaries[0];
+  for (const b of boundaries) {
+    if (Math.abs(b - mid) < Math.abs(best - mid)) best = b;
+  }
+  return [story.slice(0, best + 1), story.slice(best + 2)];
+}
+
 interface StationSectionProps {
   station: StationContent;
   reduced: boolean;
   register: (el: HTMLElement | null) => void;
 }
 
+const storyStyle = {
+  color: 'var(--ink-soft)',
+  fontSize: 'clamp(1.02rem, 1.5vw, 1.18rem)',
+  lineHeight: 1.85,
+  fontWeight: 300,
+  maxWidth: '38rem',
+  textWrap: 'pretty',
+} as const;
+
 // Eine Station der Reise. Erst der Welt-Einstieg, der den Nutzer sinnlich in die
 // Zeit versetzt, dann, beim Weiterscrollen, das lebende Bild, dann der Berufsname,
-// dann die Geschichte. Jede Schicht erscheint fuer sich, mit viel Raum dazwischen.
-// Die Szenen-Bewegung startet erst, wenn die Station erreicht ist.
+// dann die Geschichte in zwei ruhigen Schritten. Jede Schicht erscheint fuer sich,
+// mit viel Raum dazwischen. Die Szenen-Bewegung startet erst beim Erreichen.
 export function StationSection({ station, reduced, register }: StationSectionProps) {
   const palette = palettes[station.id];
   const Scene = sceneFor[station.id];
   const sceneRef = useRef<HTMLDivElement>(null);
   const active = useInView(sceneRef, { amount: 0.35 });
+  const [storyA, storyB] = splitStory(station.story);
 
   useEffect(() => {
     register(sceneRef.current);
@@ -40,7 +67,7 @@ export function StationSection({ station, reduced, register }: StationSectionPro
 
   return (
     <section
-      className="relative flex min-h-[174vh] w-full flex-col items-center px-6 py-[26vh]"
+      className="relative flex min-h-[192vh] w-full flex-col items-center px-6 py-[26vh]"
       style={paletteVars(palette)}
     >
       {/* Welt-Einstieg. Erst die Welt, dann der Mensch darin. */}
@@ -94,23 +121,30 @@ export function StationSection({ station, reduced, register }: StationSectionPro
           {station.profession}
         </motion.h2>
 
+        {/* Die Geschichte in zwei ruhigen Schritten. */}
         <motion.p
           variants={reveal(reduced)}
           initial="hidden"
           whileInView="shown"
-          viewport={{ once: true, amount: 0.5 }}
-          className="mt-[6vh] font-serif"
-          style={{
-            color: 'var(--ink-soft)',
-            fontSize: 'clamp(1.02rem, 1.5vw, 1.18rem)',
-            lineHeight: 1.85,
-            fontWeight: 300,
-            maxWidth: '38rem',
-            textWrap: 'pretty',
-          }}
+          viewport={{ once: true, amount: 0.6 }}
+          className="mt-[7vh] font-serif"
+          style={storyStyle}
         >
-          {station.story}
+          {storyA}
         </motion.p>
+
+        {storyB && (
+          <motion.p
+            variants={reveal(reduced)}
+            initial="hidden"
+            whileInView="shown"
+            viewport={{ once: true, amount: 0.7 }}
+            className="mt-[5vh] font-serif"
+            style={storyStyle}
+          >
+            {storyB}
+          </motion.p>
+        )}
       </div>
     </section>
   );

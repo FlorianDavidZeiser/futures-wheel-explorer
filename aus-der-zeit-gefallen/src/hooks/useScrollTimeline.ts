@@ -55,8 +55,10 @@ export function useScrollTimeline({
             if (p >= turn.stepStops[i]) yr = turn.sequence[i];
           }
           yearMV.set(yr);
-          // Die Patina legt sich langsam und stetig ueber den eigenen Beruf.
-          patinaMV.set(Math.pow(clamp(p / 0.9), 1.2));
+          // Die Station haelt erst ruhig bei 2026, klar und gleich wie die
+          // historischen. Erst danach legt sich die Patina langsam und stetig und
+          // ist bei 2070 vollstaendig.
+          patinaMV.set(Math.pow(clamp((p - 0.18) / (0.8 - 0.18)), 1.2));
           pinMV.set(p);
           hudOpacity.set(1);
           return;

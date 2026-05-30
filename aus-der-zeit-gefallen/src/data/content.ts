@@ -11,8 +11,10 @@ export const intro = {
   title: 'Aus der Zeit gefallen',
   lead:
     'Manche Berufe waren einmal selbstverständlich. Jeden Tag gebraucht, dann über Nacht vergessen. Eine kurze Reise durch Arbeit, die es nicht mehr gibt.',
-  question: 'Bevor wir beginnen, eine Frage. Was arbeitest du?',
+  question: 'Eine Frage vorab. Was arbeitest du gerade?',
   start: 'Beginnen',
+  /** Sehr dezenter Hinweis am Ende von Screen A, um selbst weiterzugehen. */
+  forward: 'weiter',
 } as const;
 
 export type StationId = 'lamplighter' | 'knockerup' | 'switchboard' | 'computer';
@@ -93,8 +95,11 @@ export const turn = {
   // Das Hochlaufen geschieht in Schritten, erst klein, dann beschleunigend. Die
   // Stops sind die Scroll-Fortschritte, an denen das jeweilige Jahr greift, mit
   // abnehmendem Abstand, damit die Zeit spuerbar schneller wird.
+  // Jeder Schritt bekommt Verweilzeit. Die Abstaende nehmen ab, erst zoegerlich,
+  // dann beschleunigt die Zeit unter den Fuessen. 2070 ist bei 0.8 erreicht,
+  // danach ein Halt mit Stille, bevor die Schlusszeile erscheint.
   sequence: [2026, 2030, 2035, 2045, 2060, 2070],
-  stepStops: [0, 0.28, 0.5, 0.66, 0.8, 0.9],
+  stepStops: [0, 0.22, 0.42, 0.58, 0.7, 0.8],
   /** An der Stelle, wo bei den anderen die Andeutung stand, nur ein Fragezeichen. */
   mark: '?',
   /** Beruf, wenn der Nutzer nichts eingegeben hat. */
