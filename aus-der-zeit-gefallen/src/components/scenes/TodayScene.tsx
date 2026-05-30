@@ -2,10 +2,11 @@ import { motion } from 'framer-motion';
 import { SCENE_VIEWBOX, type SceneProps } from './sceneTypes';
 
 // 2026. Das Heute, bewusst gewoehnlich. Ein Schreibtisch, ein Bildschirm, das
-// kalte blaue Leuchten eines Monitors in einem ansonsten dunklen Raum. Der
-// kaelteste Punkt des ganzen Stuecks. Die Waerme ist erloschen.
-export function TodayScene({ palette, reduced }: SceneProps) {
+// kalte blaue Leuchten eines Monitors in einem dunklen Raum. Der kaelteste
+// Punkt. Die eine Bewegung ist das ruhige Atmen des kalten Bildschirmlichts.
+export function TodayScene({ palette, reduced, active = true }: SceneProps) {
   const { bgDeep, glow, accent, accentSoft } = palette;
+  const still = reduced || !active;
 
   return (
     <svg viewBox={SCENE_VIEWBOX} className="h-full w-full" role="img" aria-label="Ein Mensch sitzt im kalten blauen Licht eines Bildschirms in einem dunklen Raum.">
@@ -21,14 +22,13 @@ export function TodayScene({ palette, reduced }: SceneProps) {
         </linearGradient>
       </defs>
 
-      {/* Der dunkle Raum. */}
       <rect x="0" y="0" width="800" height="460" fill={bgDeep} />
 
-      {/* Das kalte Leuchten des Monitors in den Raum. */}
+      {/* Das kalte Leuchten des Monitors, die eine ruhige Bewegung. */}
       <motion.rect
         x="0" y="0" width="800" height="460" fill="url(#td-screenglow)"
-        animate={reduced ? undefined : { opacity: [0.9, 1, 0.94, 1, 0.9] }}
-        transition={reduced ? undefined : { duration: 9, repeat: Infinity, ease: 'easeInOut' }}
+        animate={still ? { opacity: 0.96 } : { opacity: [0.9, 1, 0.94, 1, 0.9] }}
+        transition={still ? undefined : { duration: 9, repeat: Infinity, ease: 'easeInOut' }}
       />
 
       {/* Der Schreibtisch. */}
@@ -40,7 +40,6 @@ export function TodayScene({ palette, reduced }: SceneProps) {
       <g>
         <rect x="356" y="150" width="200" height="128" rx="6" fill={bgDeep} stroke={accentSoft} strokeWidth={3} />
         <rect x="368" y="162" width="176" height="104" rx="2" fill="url(#td-screen)" opacity={0.92} />
-        {/* Kalte Zeilen auf dem Bildschirm. */}
         <g fill="#cfe3ff" opacity={0.5}>
           <rect x="380" y="178" width="120" height="4" rx="2" />
           <rect x="380" y="192" width="148" height="4" rx="2" />
@@ -58,7 +57,6 @@ export function TodayScene({ palette, reduced }: SceneProps) {
           fill={bgDeep}
         />
         <circle cx="372" cy="244" r="24" fill={bgDeep} />
-        {/* Kalter Lichtsaum vom Bildschirm. */}
         <path d="M396 232 A 24 24 0 0 1 396 256" stroke={glow} strokeWidth={2.2} fill="none" opacity={0.7} />
         <path d="M418 286 Q 426 320 426 352" stroke={glow} strokeWidth={2} fill="none" opacity={0.45} />
       </g>

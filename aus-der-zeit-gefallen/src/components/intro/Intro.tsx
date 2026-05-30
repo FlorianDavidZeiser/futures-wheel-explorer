@@ -2,51 +2,57 @@ import { useState, type FormEvent } from 'react';
 import { motion } from 'framer-motion';
 import { useExperience } from '../../state/ExperienceContext';
 import { intro } from '../../data/content';
-import { sceneVariants } from '../../styles/motionPresets';
+import { palettes, paletteVars } from '../../styles/palettes';
 import { Button } from '../ui/Button';
 
-// Der Eingang. Aus dem Dunkel glimmt ein warmer Lichtschein auf, dann der Titel,
-// dann eine einzige Frage und ein schlichtes Eingabefeld. Die Frage wirkt
-// beilaeufig, in Wahrheit ist sie die Saat fuer den Schluss.
-export function Intro({ reduced }: { reduced: boolean }) {
-  const { dispatch } = useExperience();
+// Der Eingang, der Vorhang, der sich hebt. Aus dem Dunkel glimmt das warme Licht
+// auf, dann der Titel, dann zwei, drei ruhige Saetze, dann die Frage. Er laesst
+// sich Zeit. Danach beginnt die Scroll-Reise.
+export function Intro({ reduced, onBegin }: { reduced: boolean; onBegin: () => void }) {
+  const { setProfession } = useExperience();
   const [value, setValue] = useState('');
+
+  const begin = () => {
+    setProfession(value);
+    onBegin();
+  };
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-    dispatch({ type: 'BEGIN', profession: value });
+    begin();
   };
 
+  // Zeitliche Taktung des sich hebenden Vorhangs.
+  const t = reduced
+    ? { glow: 0, title: 0.1, lead: 0.25, ask: 0.45 }
+    : { glow: 0.2, title: 1.8, lead: 3.2, ask: 5.0 };
+
   return (
-    <motion.div
-      variants={sceneVariants(reduced)}
-      initial="initial"
-      animate="enter"
-      exit="exit"
-      className="relative flex min-h-[80vh] w-full flex-col items-center justify-center px-6 text-center"
+    <section
+      className="relative flex min-h-[100svh] w-full flex-col items-center justify-center overflow-hidden px-6 text-center"
+      style={{ ...paletteVars(palettes.intro), background: palettes.intro.bgDeep }}
     >
       {/* Das warme Aufglimmen einer Gaslaterne. */}
       <motion.div
         aria-hidden
         className="pointer-events-none absolute"
-        initial={{ opacity: 0, scale: reduced ? 1 : 0.6 }}
+        initial={{ opacity: 0, scale: reduced ? 1 : 0.55 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: reduced ? 0.4 : 2.6, ease: 'easeOut', delay: reduced ? 0 : 0.2 }}
+        transition={{ duration: reduced ? 0.5 : 3, ease: 'easeOut', delay: t.glow }}
         style={{
-          width: 'min(70vw, 540px)',
-          height: 'min(70vw, 540px)',
-          top: '-6%',
+          width: 'min(78vw, 560px)',
+          height: 'min(78vw, 560px)',
+          top: '12%',
           borderRadius: '50%',
-          background:
-            'radial-gradient(circle, color-mix(in srgb, var(--glow) 60%, transparent) 0%, transparent 62%)',
-          filter: 'blur(8px)',
+          background: 'radial-gradient(circle, color-mix(in srgb, var(--glow) 55%, transparent) 0%, transparent 62%)',
+          filter: 'blur(10px)',
         }}
       />
 
       <motion.h1
-        initial={{ opacity: 0, y: 10 }}
+        initial={{ opacity: 0, y: reduced ? 0 : 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: reduced ? 0.4 : 1.4, ease: 'easeOut', delay: reduced ? 0.1 : 1.5 }}
+        transition={{ duration: reduced ? 0.5 : 1.8, ease: 'easeOut', delay: t.title }}
         className="relative font-serif"
         style={{
           color: 'var(--ink)',
@@ -59,25 +65,37 @@ export function Intro({ reduced }: { reduced: boolean }) {
         {intro.title}
       </motion.h1>
 
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
+      <motion.p
+        initial={{ opacity: 0, y: reduced ? 0 : 8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: reduced ? 0.4 : 1.2, ease: 'easeOut', delay: reduced ? 0.2 : 2.7 }}
-        className="relative mt-12 flex w-full max-w-md flex-col items-center"
+        transition={{ duration: reduced ? 0.5 : 2, ease: 'easeOut', delay: t.lead }}
+        className="relative mt-8 font-serif"
+        style={{
+          color: 'var(--ink-soft)',
+          fontSize: 'clamp(1.02rem, 1.7vw, 1.22rem)',
+          lineHeight: 1.8,
+          fontWeight: 300,
+          maxWidth: '34rem',
+          textWrap: 'pretty',
+        }}
+      >
+        {intro.lead}
+      </motion.p>
+
+      <motion.div
+        initial={{ opacity: 0, y: reduced ? 0 : 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: reduced ? 0.5 : 1.6, ease: 'easeOut', delay: t.ask }}
+        className="relative mt-16 flex w-full max-w-md flex-col items-center"
       >
         <p
           className="font-serif"
-          style={{
-            color: 'var(--ink-soft)',
-            fontSize: 'clamp(1rem, 1.6vw, 1.15rem)',
-            lineHeight: 1.6,
-            fontWeight: 300,
-          }}
+          style={{ color: 'var(--ink-soft)', fontSize: '1.02rem', lineHeight: 1.6, fontWeight: 300 }}
         >
           {intro.question}
         </p>
 
-        <form onSubmit={onSubmit} className="mt-7 flex w-full flex-col items-center gap-5">
+        <form onSubmit={onSubmit} className="mt-7 flex w-full flex-col items-center gap-6">
           <input
             type="text"
             value={value}
@@ -94,11 +112,27 @@ export function Intro({ reduced }: { reduced: boolean }) {
               outline: 'none',
             }}
           />
-          <Button type="submit" onClick={() => undefined}>
+          <Button type="submit" onClick={begin}>
             {intro.start}
           </Button>
         </form>
       </motion.div>
-    </motion.div>
+
+      {/* Ein leiser Hinweis, dass es nach unten weitergeht. */}
+      <motion.div
+        aria-hidden
+        className="pointer-events-none absolute bottom-[5vh]"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: reduced ? 0.4 : [0.2, 0.5, 0.2] }}
+        transition={
+          reduced
+            ? { duration: 0.5, delay: t.ask }
+            : { duration: 3.5, repeat: Infinity, ease: 'easeInOut', delay: t.ask + 1 }
+        }
+        style={{ color: 'var(--ink-faint)', fontSize: '1.3rem', lineHeight: 1 }}
+      >
+        ↓
+      </motion.div>
+    </section>
   );
 }

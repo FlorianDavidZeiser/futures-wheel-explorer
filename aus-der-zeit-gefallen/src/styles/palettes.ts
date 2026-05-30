@@ -123,7 +123,18 @@ export const palettes: Record<LookId, Palette> = {
   },
 };
 
-/** Wandelt eine Palette in CSS-Variablen fuer den Wurzel-Container. */
+// Stuetzpunkte des Temperaturbogens, an die Jahreszahl gebunden. Zwischen ihnen
+// kuehlt die Farbwelt waehrend des Scrollens ruhig und stetig ab. Jenseits von
+// 2026 bleibt es beim kalten Heute, die Patina altert dann nur das Bild.
+export const ARC_YEARS = [1850, 1920, 1930, 1950, 2026];
+export const ARC_LOOKS: LookId[] = ['lamplighter', 'knockerup', 'switchboard', 'computer', 'today'];
+
+/** Liefert die Farbwerte eines Feldes ueber alle Stuetzpunkte des Bogens. */
+export function arcStops(field: keyof Palette): string[] {
+  return ARC_LOOKS.map((l) => palettes[l][field] as string);
+}
+
+/** Wandelt eine Palette in CSS-Variablen fuer einen Container. */
 export function paletteVars(p: Palette): CSSProperties {
   return {
     ['--bg' as string]: p.bg,
