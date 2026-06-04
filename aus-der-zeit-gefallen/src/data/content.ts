@@ -61,7 +61,7 @@ export const stations: StationContent[] = [
   },
   {
     id: 'knockerup',
-    year: 1920,
+    year: 1890,
     place: 'Manchester',
     // FORM: Frage. Konkrete Anker, dann eine Frage, die zum Mitdenken zwingt.
     // PLATZHALTER, vom Auftraggeber final.

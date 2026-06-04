@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { SCENE_VIEWBOX, type SceneProps } from './sceneTypes';
 
-// 1920. Eine enge Gasse vor Sonnenaufgang, kaltes Schiefergrau. Eine Figur mit
+// 1890. Eine enge Gasse vor Sonnenaufgang, kaltes Schiefergrau. Eine Figur mit
 // langem Rohr, das zum Fenster zeigt. Die eine Bewegung ist das warme Licht des
 // einen erwachenden Fensters, das ruhig atmet, der emotionale Anker der kalten
 // Szene. Alles andere steht still.
