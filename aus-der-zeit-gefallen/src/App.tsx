@@ -14,6 +14,7 @@ import { units } from './units';
 import { YearHud } from './components/ui/YearHud';
 import { Forward } from './components/ui/Forward';
 import { UnitView } from './components/screen/UnitView';
+import { SwipeInvite } from './components/screen/SwipeInvite';
 
 const SMALL = 520; // ms, kleiner Uebergang, innerhalb einer Station.
 const BIG = 860; // ms, grosser Uebergang, zwischen Stationen.
@@ -29,6 +30,9 @@ export function App() {
   const [u, setU] = useState(0);
   const [b, setB] = useState(0);
   const [direction, setDirection] = useState(1);
+  // Die einmalige Wisch-Einladung, nur am Anfang, verschwindet nach dem ersten
+  // Weitergehen und kommt nie wieder.
+  const [invite, setInvite] = useState(true);
   const uRef = useRef(0);
   const bRef = useRef(0);
   const lockUntil = useRef(0);
@@ -78,6 +82,7 @@ export function App() {
   const go = useCallback((dir: 1 | -1) => {
     const now = Date.now();
     if (now < lockUntil.current) return;
+    setInvite(false); // Die Einladung weicht beim ersten Weitergehen.
     const cu = uRef.current;
     const cb = bRef.current;
     if (dir === 1) {
@@ -181,7 +186,14 @@ export function App() {
       <motion.div aria-hidden className="fixed inset-0 -z-10" style={{ background }} />
 
       <YearHud value={yearRounded} opacity={hudOpacity} color={ink} />
-      <Forward onClick={next} visible={!atEnd} color={ink} reduced={reduced} />
+      <Forward dir="next" onClick={next} visible={!atEnd} color={ink} reduced={reduced} />
+      <Forward dir="prev" onClick={prev} visible={u > 0 || b > 0} color={ink} reduced={reduced} />
+
+      <AnimatePresence>
+        {invite && u === 0 ? (
+          <SwipeInvite key="invite" reduced={reduced} onDone={() => setInvite(false)} />
+        ) : null}
+      </AnimatePresence>
 
       <div className="fixed inset-0 overflow-hidden">
         <AnimatePresence initial={false} custom={direction}>

@@ -15,6 +15,8 @@ export const intro = {
   start: 'Beginnen',
   /** Sehr dezenter Hinweis am Ende von Screen A, um selbst weiterzugehen. */
   forward: 'weiter',
+  /** Einmalige Wisch-Einladung beim ersten Uebergang. */
+  swipe: 'wischen',
 } as const;
 
 export type StationId = 'lamplighter' | 'knockerup' | 'switchboard' | 'computer';
