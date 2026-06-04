@@ -38,11 +38,11 @@ export const stations: StationContent[] = [
   {
     id: 'lamplighter',
     year: 1850,
-    // FORM: Bild. Ein langer, atmender Satz, der die Dunkelheit malt. Keine
-    // Jahreszahl am Satzanfang. PLATZHALTER, vom Auftraggeber zu ersetzen.
+    // FORM: Bild. Ein atmender Satz, der die Dunkelheit und das Zeitkolorit
+    // malt. Keine Jahreszahl am Satzanfang. PLATZHALTER, vom Auftraggeber final.
     worldEntryForm: 'bild',
     worldEntry:
-      'Wenn die Sonne sinkt, fällt die Stadt zurück ins Schwarze, Gasse um Gasse, Fenster um Fenster, bis nichts mehr bleibt als der Mond und das wenige Licht, das ein Mensch mit der Hand hineinträgt.',
+      'Kohlenrauch liegt über den Dächern, Pferdehufe auf nassem Pflaster, und nirgends auf der Welt brennt auch nur eine elektrische Lampe. Wenn die Sonne sinkt, fällt die Stadt zurück ins Schwarze, Gasse um Gasse, bis nichts bleibt als der Mond und das wenige Licht, das ein Mensch mit der Hand hineinträgt.',
     profession: 'Der Laternenanzünder',
     story:
       'Dreißig Minuten nach Sonnenuntergang geht er los. Immer dieselbe Runde, Laterne für Laterne, die Stange gehoben, ein Aufflammen, weiter. Hinter ihm bleibt eine Kette aus Licht in der blauen Luft, und die Leute am Fenster stellen ihre Uhren nach ihm. Sein Vater ist dieselbe Runde gegangen, sein Sohn wird sie gehen, das ist ausgemacht. Bei Morgengrauen kommt er zurück und nimmt das Licht wieder mit.',
@@ -50,10 +50,11 @@ export const stations: StationContent[] = [
   {
     id: 'knockerup',
     year: 1920,
-    // FORM: Frage. Zwingt zum Mitdenken, statt aufzuzaehlen. PLATZHALTER.
+    // FORM: Frage. Konkrete Anker, dann eine Frage, die zum Mitdenken zwingt.
+    // PLATZHALTER, vom Auftraggeber final.
     worldEntryForm: 'frage',
     worldEntry:
-      'Wie weckst du eine ganze Stadt voller Arbeiter auf die Minute, wenn kaum einer eine Uhr besitzt und das verschlossene Fabriktor den Tageslohn kostet?',
+      'Die Fabriksirene duldet keine Verspätung, eine Uhr kostet mehr, als eine Woche Arbeit einbringt, und das Radio gibt es noch nicht. Wie also weckst du eine ganze Stadt voller Arbeiter auf die Minute?',
     profession: 'Der Weckdienst',
     story:
       'Außer sonntags bin ich um drei auf den Beinen. Mein Rohr, eine Handvoll getrockneter Erbsen, und los durch die nassen Gassen. Ich schieße sie ans Glas, bis oben einer ans Fenster tritt und nickt, erst dann gehe ich weiter, nicht eher. Sechs Pence die Woche. Der Alte drei Meilen weiter macht es mit einer Angelrute, aber meine Erbsen treffen sicherer. Mich weckt keiner. Es ist ein gutes Geschäft, denke ich, solange Menschen zur Schicht müssen.',
@@ -61,11 +62,11 @@ export const stations: StationContent[] = [
   {
     id: 'switchboard',
     year: 1930,
-    // FORM: Szene, mitten in der Handlung. Geraeusch, Stimme, Handlung zuerst,
-    // die Zeit erst danach. Kurze Saetze. PLATZHALTER.
+    // FORM: Szene, mitten in der Handlung. Geraeusch und Handlung zuerst, die
+    // Zeitanker eingewoben, das Jahr erst danach. PLATZHALTER, vom Auftraggeber final.
     worldEntryForm: 'szene',
     worldEntry:
-      'Klick. Stecker raus, Stecker rein. Nummer bitte. Eine Hand fährt über die Wand aus Kabeln, lange bevor du weißt, in welchem Jahr du stehst.',
+      'Klick. Stecker raus, Stecker rein. Im Kino reden die Bilder seit Kurzem, auf der Straße fahren mehr Automobile als Pferde, und jedes Telefonat der Stadt geht durch eine Hand an einer Wand aus Kabeln, lange bevor du weißt, in welchem Jahr du stehst.',
     profession: 'Das Fräulein vom Amt',
     story:
       'Nummer bitte, sagst du, hundertmal in der Stunde. Du kennst keine Nummern, du kennst Namen, jeden Teilnehmer der Stadt trägst du im Kopf. Du ziehst den Stecker, verbindest zwei Menschen, hörst den ersten Satz, ziehst den nächsten. Schwarzes Kleid, kein Schmuck, an manchen Tagen Rollschuhe, damit du schneller ans Ende der Wand kommst. Durch deine Hände geht jedes Gespräch dieser Stadt. Ohne dich redet hier niemand mit niemandem.',
@@ -73,11 +74,11 @@ export const stations: StationContent[] = [
   {
     id: 'computer',
     year: 1950,
-    // FORM: Fakt, kuehl und trocken gesetzt, kurze Saetze, kein Pathos.
-    // PLATZHALTER.
+    // FORM: Fakt, kuehl und trocken gesetzt, kein Pathos. PLATZHALTER, final
+    // vom Auftraggeber.
     worldEntryForm: 'fakt',
     worldEntry:
-      'Computer war einmal ein Beruf. Kein Gerät. Ein Mensch, der rechnete, acht Stunden am Tag, mit der Hand.',
+      'Computer war einmal ein Beruf. Kein Gerät. Ein Mensch, meist eine Frau, mit Bleistift, Rechenmaschine und Millimeterpapier, der rechnete, was keine Maschine schnell genug konnte.',
     profession: 'Der menschliche Computer',
     story:
       'Beruf, Computer. Werkzeug, Bleistift, Millimeterpapier, eine Rechenmaschine. Sie liest die Werte unter dem Mikroskop vom Graphen ab und trägt sie ein, acht Stunden, dieselbe Gleichung. Eine Flugbahn füllt sechs Notizbücher und dauert eine Woche. Ihre Zahlen entscheiden, ob die Rakete fliegt, und eine Zeit lang traut man ihnen mehr als der neuen Maschine im Nebenraum. Dann schreibt eine von ihnen das Programm für die Maschine. Den Namen Computer gibt sie damit ab.',
