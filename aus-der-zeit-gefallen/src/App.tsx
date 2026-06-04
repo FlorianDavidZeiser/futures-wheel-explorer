@@ -10,88 +10,114 @@ import {
 import { useExperience } from './state/ExperienceContext';
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion';
 import { palettes } from './styles/palettes';
-import { screens, type Screen } from './screens';
+import { units } from './units';
 import { YearHud } from './components/ui/YearHud';
 import { Forward } from './components/ui/Forward';
-import { IntroA } from './components/screen/IntroA';
-import { IntroB } from './components/screen/IntroB';
-import { StationScreen } from './components/screen/StationScreen';
-import { SilhouetteScreen } from './components/screen/SilhouetteScreen';
+import { UnitView } from './components/screen/UnitView';
 
-const COOLDOWN = 820; // ms, etwas laenger als der Uebergang, gegen Ueberspringen.
+const SMALL = 520; // ms, kleiner Uebergang, innerhalb einer Station.
+const BIG = 860; // ms, grosser Uebergang, zwischen Stationen.
 
-// Die Buehne. Eine horizontale Abfolge von Screens, von links nach rechts, von
-// der Vergangenheit in die Zukunft. Vorwaerts heisst nach rechts. Die Jahreszahl
-// laeuft als fester Anker mit und zaehlt bei jedem Vorwaertsgehen hoch. Der
-// Temperaturbogen liegt als ruhiger Hintergrund dahinter.
+// Die Buehne. Eine einzige Vorwaerts-Linie. Innerhalb einer Unit entfalten sich
+// die Beats an Ort und Stelle (kleiner Uebergang), zwischen Units traegt der
+// grosse Uebergang in eine neue Zeit, mit hochzaehlender Jahreszahl und neuer
+// Farbtemperatur. Der Nutzer waehlt nie eine Richtung, nur vor oder zurueck.
 export function App() {
   const { profession, setProfession, reset } = useExperience();
   const reduced = usePrefersReducedMotion();
 
-  const [index, setIndex] = useState(0);
+  const [u, setU] = useState(0);
+  const [b, setB] = useState(0);
   const [direction, setDirection] = useState(1);
-  const lastNav = useRef(0);
-  const active = screens[index];
-  const last = screens.length - 1;
+  const uRef = useRef(0);
+  const bRef = useRef(0);
+  const lockUntil = useRef(0);
+  useEffect(() => {
+    uRef.current = u;
+    bRef.current = b;
+  }, [u, b]);
 
-  // Der Temperaturbogen und die Jahreszahl, als MotionValues, ruhig animiert.
+  const unit = units[u];
+  const lastU = units.length - 1;
+  const atEnd = u === lastU && b >= units[lastU].beatCount - 1;
+
+  // Temperaturbogen und Jahreszahl, ruhig animiert. Nur beim grossen Uebergang.
   const bg = useMotionValue(palettes.intro.bg);
   const bgDeep = useMotionValue(palettes.intro.bgDeep);
   const ink = useMotionValue(palettes.intro.ink);
-  const yearMV = useMotionValue(screens.find((s) => s.year != null)?.year ?? 1850);
-  const yearRounded = useMotionValue(yearMV.get());
+  const firstYear = units.find((x) => x.year != null)?.year ?? 1850;
+  const yearMV = useMotionValue(firstYear);
+  const yearRounded = useMotionValue(firstYear);
   const hudOpacity = useMotionValue(0);
   const background = useMotionTemplate`linear-gradient(180deg, ${bg} 0%, ${bgDeep} 100%)`;
 
-  // Auf jeden Screenwechsel, ruhige Farbangleichung und Jahreszahl hochzaehlen.
   useEffect(() => {
-    const look = palettes[active.look];
+    const look = palettes[unit.look];
     const dur = reduced ? 0 : 1.2;
-    const c1 = animate(bg, look.bg, { duration: dur, ease: 'easeInOut' });
-    const c2 = animate(bgDeep, look.bgDeep, { duration: dur, ease: 'easeInOut' });
-    const c3 = animate(ink, look.ink, { duration: dur, ease: 'easeInOut' });
-
-    const controls: { stop: () => void }[] = [c1, c2, c3];
-    if (active.year != null) {
-      const yc = animate(yearMV, active.year, {
-        duration: reduced ? 0 : 1.1,
-        ease: 'easeOut',
-        onUpdate: (v) => yearRounded.set(Math.round(v)),
-      });
-      controls.push(yc);
+    const cs = [
+      animate(bg, look.bg, { duration: dur, ease: 'easeInOut' }),
+      animate(bgDeep, look.bgDeep, { duration: dur, ease: 'easeInOut' }),
+      animate(ink, look.ink, { duration: dur, ease: 'easeInOut' }),
+    ];
+    if (unit.year != null) {
+      cs.push(
+        animate(yearMV, unit.year, {
+          duration: reduced ? 0 : 1.1,
+          ease: 'easeOut',
+          onUpdate: (v) => yearRounded.set(Math.round(v)),
+        })
+      );
     }
-    animate(hudOpacity, active.year != null ? 1 : 0, { duration: reduced ? 0 : 0.7, ease: 'easeOut' });
-
-    return () => controls.forEach((c) => c.stop());
+    animate(hudOpacity, unit.year != null ? 1 : 0, { duration: reduced ? 0 : 0.7, ease: 'easeOut' });
+    return () => cs.forEach((c) => c.stop());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [index, reduced]);
+  }, [u, reduced]);
 
-  const go = useCallback(
-    (dir: 1 | -1) => {
-      const now = Date.now();
-      if (now - lastNav.current < COOLDOWN) return;
-      setIndex((i) => {
-        const ni = i + dir;
-        if (ni < 0 || ni > last) return i;
-        lastNav.current = now;
-        setDirection(dir);
-        return ni;
-      });
-    },
-    [last]
-  );
+  // Eine einzige Vorwaerts- und Rueckwaerts-Logik. Schaltet mal einen Beat, mal,
+  // wenn die Unit fertig ist, die naechste Unit als grossen Uebergang.
+  const go = useCallback((dir: 1 | -1) => {
+    const now = Date.now();
+    if (now < lockUntil.current) return;
+    const cu = uRef.current;
+    const cb = bRef.current;
+    if (dir === 1) {
+      if (cb < units[cu].beatCount - 1) {
+        lockUntil.current = now + SMALL;
+        setDirection(1);
+        setB(cb + 1);
+      } else if (cu < units.length - 1) {
+        lockUntil.current = now + BIG;
+        setDirection(1);
+        setU(cu + 1);
+        setB(0);
+      }
+    } else {
+      if (cb > 0) {
+        lockUntil.current = now + SMALL;
+        setDirection(-1);
+        setB(cb - 1);
+      } else if (cu > 0) {
+        lockUntil.current = now + BIG;
+        setDirection(-1);
+        const pu = cu - 1;
+        setU(pu);
+        setB(units[pu].beatCount - 1);
+      }
+    }
+  }, []);
 
   const next = useCallback(() => go(1), [go]);
   const prev = useCallback(() => go(-1), [go]);
 
   const restart = useCallback(() => {
-    lastNav.current = Date.now();
+    lockUntil.current = Date.now() + BIG;
     setDirection(-1);
     reset();
-    setIndex(0);
+    setU(0);
+    setB(0);
   }, [reset]);
 
-  // Mausrad und Trackpad, vertikal oder horizontal, steuern vor und zurueck.
+  // Mausrad und Trackpad.
   useEffect(() => {
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
@@ -104,7 +130,7 @@ export function App() {
     return () => window.removeEventListener('wheel', onWheel);
   }, [next, prev]);
 
-  // Pfeiltasten, vor und zurueck. Eingabefeld nicht stoeren.
+  // Pfeiltasten und Leertaste, Eingabefeld nicht stoeren.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement | null)?.tagName;
@@ -129,29 +155,38 @@ export function App() {
     [next, prev]
   );
 
-  // Sanftes seitliches Hereingleiten, ease-out, dazu eine leichte Ueberblendung.
+  // Tipp auf die rechte Bildhaelfte vor, linke zurueck. Knoepfe und Feld ausnehmen.
+  const onTap = useCallback(
+    (e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+      const el = e.target as HTMLElement | null;
+      if (el && el.closest('button, input, a')) return;
+      if (info.point.x > window.innerWidth * 0.5) next();
+      else prev();
+    },
+    [next, prev]
+  );
+
   const enter = (dir: number) =>
     reduced ? { opacity: 0 } : { x: dir >= 0 ? '100%' : '-100%', opacity: 0 };
   const exit = (dir: number) =>
     reduced
       ? { opacity: 0, transition: { duration: 0.3 } }
-      : { x: dir >= 0 ? '-28%' : '28%', opacity: 0, transition: { duration: 0.7, ease: [0.4, 0, 0.4, 1] as const } };
+      : { x: dir >= 0 ? '-26%' : '26%', opacity: 0, transition: { duration: 0.7, ease: [0.4, 0, 0.4, 1] as const } };
   const center = reduced
     ? { opacity: 1, transition: { duration: 0.3 } }
-    : { x: 0, opacity: 1, transition: { duration: 0.85, ease: [0.22, 0.61, 0.36, 1] as const } };
+    : { x: 0, opacity: 1, transition: { duration: 0.86, ease: [0.22, 0.61, 0.36, 1] as const } };
 
   return (
     <>
-      {/* Der feste Temperaturbogen hinter der ganzen Reise. */}
       <motion.div aria-hidden className="fixed inset-0 -z-10" style={{ background }} />
 
       <YearHud value={yearRounded} opacity={hudOpacity} color={ink} />
-      <Forward onClick={next} visible={index < last} color={ink} reduced={reduced} />
+      <Forward onClick={next} visible={!atEnd} color={ink} reduced={reduced} />
 
       <div className="fixed inset-0 overflow-hidden">
         <AnimatePresence initial={false} custom={direction}>
           <motion.div
-            key={index}
+            key={u}
             custom={direction}
             className="absolute inset-0"
             variants={{ enter, center, exit }}
@@ -163,49 +198,20 @@ export function App() {
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={0.22}
             onDragEnd={onDragEnd}
+            onTap={onTap}
           >
-            {renderScreen(active, {
-              reduced,
-              profession,
-              setProfession,
-              next,
-              restart,
-            })}
+            <UnitView
+              unit={unit}
+              beat={b}
+              reduced={reduced}
+              profession={profession}
+              setProfession={setProfession}
+              onNext={next}
+              onRestart={restart}
+            />
           </motion.div>
         </AnimatePresence>
       </div>
     </>
   );
-}
-
-interface Actions {
-  reduced: boolean;
-  profession: string;
-  setProfession: (v: string) => void;
-  next: () => void;
-  restart: () => void;
-}
-
-function renderScreen(screen: Screen, a: Actions) {
-  switch (screen.kind) {
-    case 'introA':
-      return <IntroA reduced={a.reduced} onNext={a.next} />;
-    case 'introB':
-      return <IntroB reduced={a.reduced} profession={a.profession} setProfession={a.setProfession} onNext={a.next} />;
-    case 'beat':
-      return <StationScreen stationId={screen.stationId} beat={screen.beat} reduced={a.reduced} />;
-    case 'silhouette':
-      return (
-        <SilhouetteScreen
-          profession={a.profession}
-          patina={screen.patina}
-          showToday={screen.showToday}
-          showClosing={screen.showClosing}
-          reduced={a.reduced}
-          onRestart={a.restart}
-        />
-      );
-    default:
-      return null;
-  }
 }
