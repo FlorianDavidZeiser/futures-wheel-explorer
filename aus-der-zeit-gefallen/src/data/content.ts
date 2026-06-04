@@ -32,6 +32,11 @@ export interface StationContent {
   worldEntryForm: WorldEntryForm;
   profession: string;
   story: string;
+  /**
+   * Das Nachher, die Szene des Wandels. Nennt, was kam, aber immer als Szene,
+   * nie als Etikett, und spricht nie eine Lehre ueber den Nutzer aus.
+   */
+  aftermath: string;
 }
 
 export const stations: StationContent[] = [
@@ -46,6 +51,8 @@ export const stations: StationContent[] = [
     profession: 'Der Laternenanzünder',
     story:
       'Dreißig Minuten nach Sonnenuntergang geht er los. Immer dieselbe Runde, Laterne für Laterne, die Stange gehoben, ein Aufflammen, weiter. Hinter ihm bleibt eine Kette aus Licht in der blauen Luft, und die Leute am Fenster stellen ihre Uhren nach ihm. Sein Vater ist dieselbe Runde gegangen, sein Sohn wird sie gehen, das ist ausgemacht. Bei Morgengrauen kommt er zurück und nimmt das Licht wieder mit.',
+    aftermath:
+      'Eines Abends gehen die Laternen von selbst an. Erst eine Straße, dann die nächste, dann die ganze Stadt, auf einen Schalter hin, den draußen niemand sieht. Die Runde bleibt liegen. Der Sohn, der sie gehen sollte, sucht sich etwas anderes. Die Stange mit dem Haken steht noch jahrelang in einem Schuppen, bis keiner mehr weiß, wofür der Haken war.',
   },
   {
     id: 'knockerup',
@@ -58,6 +65,8 @@ export const stations: StationContent[] = [
     profession: 'Der Weckdienst',
     story:
       'Außer sonntags bin ich um drei auf den Beinen. Mein Rohr, eine Handvoll getrockneter Erbsen, und los durch die nassen Gassen. Ich schieße sie ans Glas, bis oben einer ans Fenster tritt und nickt, erst dann gehe ich weiter, nicht eher. Sechs Pence die Woche. Der Alte drei Meilen weiter macht es mit einer Angelrute, aber meine Erbsen treffen sicherer. Mich weckt keiner. Es ist ein gutes Geschäft, denke ich, solange Menschen zur Schicht müssen.',
+    aftermath:
+      'Dann liegt in den Schlafzimmern ein kleines Ding mit zwei Glocken obendrauf. Es klingelt von allein. Es kostet einmal, was ich in Wochen verdiene, und dann nie wieder. Meine Runde wird kürzer. Erst dieses Fenster, dann jenes, niemand wartet mehr auf die Erbse. Am Ende bin ich eine der Letzten, die das noch macht. Dann macht es keiner mehr.',
   },
   {
     id: 'switchboard',
@@ -70,6 +79,8 @@ export const stations: StationContent[] = [
     profession: 'Das Fräulein vom Amt',
     story:
       'Nummer bitte, sagst du, hundertmal in der Stunde. Du kennst keine Nummern, du kennst Namen, jeden Teilnehmer der Stadt trägst du im Kopf. Du ziehst den Stecker, verbindest zwei Menschen, hörst den ersten Satz, ziehst den nächsten. Schwarzes Kleid, kein Schmuck, an manchen Tagen Rollschuhe, damit du schneller ans Ende der Wand kommst. Durch deine Hände geht jedes Gespräch dieser Stadt. Ohne dich redet hier niemand mit niemandem.',
+    aftermath:
+      'An einem Mittwoch im Oktober, halb zwei am Nachmittag, legt jemand einen Hebel um. Von da an stecken sich die Gespräche selbst. Du stehst auf, nimmst deinen Mantel, gehst. Die Wand aus Kabeln wird still. Und wenn heute eine Stimme vom Band dich bittet zu warten, ist es fast immer eine Frauenstimme. Mehr ist von dir geblieben.',
   },
   {
     id: 'computer',
@@ -82,6 +93,8 @@ export const stations: StationContent[] = [
     profession: 'Der menschliche Computer',
     story:
       'Beruf, Computer. Werkzeug, Bleistift, Millimeterpapier, eine Rechenmaschine. Sie liest die Werte unter dem Mikroskop vom Graphen ab und trägt sie ein, acht Stunden, dieselbe Gleichung. Eine Flugbahn füllt sechs Notizbücher und dauert eine Woche. Ihre Zahlen entscheiden, ob die Rakete fliegt, und eine Zeit lang traut man ihnen mehr als der neuen Maschine im Nebenraum. Dann schreibt eine von ihnen das Programm für die Maschine. Den Namen Computer gibt sie damit ab.',
+    aftermath:
+      'Die Maschine im Nebenraum rechnet die Flugbahn in Stunden, nicht in Wochen. Sie ist genauer. Sie wird nicht müde. Der Saal leert sich, Tisch um Tisch. Was bleibt, ist das Wort. Computer, heute ein Gerät auf jedem Schreibtisch. Dass es einmal ein Mensch war, der so hieß, weiß kaum noch jemand.',
   },
 ];
 

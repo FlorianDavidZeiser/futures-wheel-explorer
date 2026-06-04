@@ -67,7 +67,7 @@ export function StationSection({ station, reduced, register }: StationSectionPro
 
   return (
     <section
-      className="relative flex min-h-[192vh] w-full flex-col items-center px-6 py-[26vh]"
+      className="relative flex min-h-[214vh] w-full flex-col items-center px-6 py-[26vh]"
       style={paletteVars(palette)}
     >
       {/* Welt-Einstieg. Erst die Welt, dann der Mensch darin. */}
@@ -145,6 +145,18 @@ export function StationSection({ station, reduced, register }: StationSectionPro
             {storyB}
           </motion.p>
         )}
+
+        {/* Das Nachher, die Szene des Wandels. Eigener Scrollschritt, abgesetzt. */}
+        <motion.p
+          variants={reveal(reduced)}
+          initial="hidden"
+          whileInView="shown"
+          viewport={{ once: true, amount: 0.6 }}
+          className="mt-[11vh] font-serif"
+          style={storyStyle}
+        >
+          {station.aftermath}
+        </motion.p>
       </div>
     </section>
   );
