@@ -10,7 +10,8 @@ import {
 import { useExperience } from './state/ExperienceContext';
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion';
 import { palettes } from './styles/palettes';
-import { units } from './units';
+import { units, type Unit } from './units';
+import { stations, intro, turn, closingLine } from './data/content';
 import { YearHud } from './components/ui/YearHud';
 import { Forward } from './components/ui/Forward';
 import { UnitView } from './components/screen/UnitView';
@@ -44,6 +45,8 @@ export function App() {
   const unit = units[u];
   const lastU = units.length - 1;
   const atEnd = u === lastU && b >= units[lastU].beatCount - 1;
+  // Ansage fuer Screenreader, bei jedem Beat- und Stationswechsel.
+  const announce = announceFor(unit, b, profession);
 
   // Temperaturbogen und Jahreszahl, ruhig animiert. Nur beim grossen Uebergang.
   const bg = useMotionValue(palettes.intro.bg);
@@ -64,11 +67,15 @@ export function App() {
       animate(ink, look.ink, { duration: dur, ease: 'easeInOut' }),
     ];
     if (unit.year != null) {
+      const target = unit.year;
       cs.push(
-        animate(yearMV, unit.year, {
+        animate(yearMV, target, {
           duration: reduced ? 0 : 1.1,
           ease: 'easeOut',
           onUpdate: (v) => yearRounded.set(Math.round(v)),
+          // Bei schnellem Wischen sauber auf den Zielwert klemmen, kein krummer
+          // Zwischenwert bleibt stehen.
+          onComplete: () => yearRounded.set(target),
         })
       );
     }
@@ -125,6 +132,9 @@ export function App() {
   // Mausrad und Trackpad.
   useEffect(() => {
     const onWheel = (e: WheelEvent) => {
+      // Langer Text darf vertikal scrollen, ohne dass das Rad navigiert.
+      const sc = (e.target as HTMLElement | null)?.closest('[data-scroll]') as HTMLElement | null;
+      if (sc && sc.scrollHeight > sc.clientHeight + 1) return;
       e.preventDefault();
       const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
       if (Math.abs(d) < 12) return;
@@ -165,8 +175,10 @@ export function App() {
     (e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
       const el = e.target as HTMLElement | null;
       if (el && el.closest('button, input, a')) return;
-      if (info.point.x > window.innerWidth * 0.5) next();
-      else prev();
+      // Vorwaerts ist die grosse, leichte Zone. Zurueck nur das linke Viertel,
+      // damit niemand beim Antippen zum Weiterlesen versehentlich zurueckspringt.
+      if (info.point.x < window.innerWidth * 0.28) prev();
+      else next();
     },
     [next, prev]
   );
@@ -184,6 +196,10 @@ export function App() {
   return (
     <>
       <motion.div aria-hidden className="fixed inset-0 -z-10" style={{ background }} />
+
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
+        {announce}
+      </div>
 
       <YearHud value={yearRounded} opacity={hudOpacity} color={ink} />
       <Forward dir="next" onClick={next} visible={!atEnd} color={ink} reduced={reduced} />
@@ -226,4 +242,25 @@ export function App() {
       </div>
     </>
   );
+}
+
+// Baut den Ansagetext fuer Screenreader aus Ort, Jahr, Beruf und Beat-Text.
+function announceFor(unit: Unit, beat: number, profession: string): string {
+  if (unit.kind === 'introA') return `${intro.title}. ${intro.lead}`;
+  if (unit.kind === 'introB') return intro.question;
+  if (unit.kind === 'station') {
+    const s = stations.find((x) => x.id === unit.stationId)!;
+    const head = `${s.place}, ${unit.year}.`;
+    const nm = beat >= 1 ? ` ${s.profession}.` : '';
+    const body = beat === 0 ? s.worldEntry : beat === 1 ? s.story : s.aftermath;
+    return `${head}${nm} ${body}`;
+  }
+  const name = profession.trim() || turn.fallbackProfession;
+  if (unit.isHeute) {
+    if (beat === 0) return `${unit.year}. ${turn.todayLine}`;
+    if (beat === 1) return `${unit.year}. ${name}.`;
+    return `${unit.year}. ${name}. Fragezeichen.`;
+  }
+  const base = `${unit.year}. ${name}.`;
+  return unit.showClosing ? `${base} ${closingLine}` : base;
 }

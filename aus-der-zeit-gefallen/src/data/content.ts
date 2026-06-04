@@ -28,6 +28,8 @@ export type WorldEntryForm = 'bild' | 'frage' | 'szene' | 'fakt';
 export interface StationContent {
   id: StationId;
   year: number;
+  /** Ort der Station, als museales Vitrinen-Schild. Erdet die Welt konkret. */
+  place: string;
   /** Welt-Einstieg, der vor dem Beruf in die Zeit versetzt. PLATZHALTER. */
   worldEntry: string;
   /** Die Form dieses Einstiegs. Jede Station eine andere, nie zweimal dieselbe. */
@@ -45,6 +47,7 @@ export const stations: StationContent[] = [
   {
     id: 'lamplighter',
     year: 1850,
+    place: 'London',
     // FORM: Bild. Ein atmender Satz, der die Dunkelheit und das Zeitkolorit
     // malt. Keine Jahreszahl am Satzanfang. PLATZHALTER, vom Auftraggeber final.
     worldEntryForm: 'bild',
@@ -59,6 +62,7 @@ export const stations: StationContent[] = [
   {
     id: 'knockerup',
     year: 1920,
+    place: 'Manchester',
     // FORM: Frage. Konkrete Anker, dann eine Frage, die zum Mitdenken zwingt.
     // PLATZHALTER, vom Auftraggeber final.
     worldEntryForm: 'frage',
@@ -73,6 +77,7 @@ export const stations: StationContent[] = [
   {
     id: 'switchboard',
     year: 1930,
+    place: 'New York',
     // FORM: Szene, mitten in der Handlung. Geraeusch und Handlung zuerst, die
     // Zeitanker eingewoben, das Jahr erst danach. PLATZHALTER, vom Auftraggeber final.
     worldEntryForm: 'szene',
@@ -87,6 +92,7 @@ export const stations: StationContent[] = [
   {
     id: 'computer',
     year: 1950,
+    place: 'Langley',
     // FORM: Fakt, kuehl und trocken gesetzt, kein Pathos. PLATZHALTER, final
     // vom Auftraggeber.
     worldEntryForm: 'fakt',
@@ -124,7 +130,7 @@ export const turn = {
   // laesst das Heute genauso selbstverstaendlich erscheinen wie den anderen ihre
   // Zeit. Angedeutet, nie als Lehre. PLATZHALTER, vom Auftraggeber zu schreiben.
   todayLine:
-    'Heute. Der vertraute Schreibtisch, das kühle Licht, der eigene Griff in den Tag. So selbstverständlich, als bliebe es für immer.',
+    'Heute. Der vertraute Schreibtisch, das kühle Licht, der eigene Griff in den Tag. So sicher, als bliebe es für immer.',
 } as const;
 
 // Eine einzige, leise Zeile. Keine Moral, keine Frage, keine Erklaerung.

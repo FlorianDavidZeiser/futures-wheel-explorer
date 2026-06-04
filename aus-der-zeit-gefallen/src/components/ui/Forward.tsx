@@ -27,8 +27,17 @@ export function Forward({
       initial={false}
       animate={{ opacity: visible ? restOpacity : 0 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
-      style={{ color, pointerEvents: visible ? 'auto' : 'none' }}
-      className={`fixed top-1/2 z-30 -translate-y-1/2 font-serif ${isNext ? 'right-[2.5vw]' : 'left-[2.5vw]'}`}
+      style={{
+        color,
+        pointerEvents: visible ? 'auto' : 'none',
+        minWidth: '44px',
+        minHeight: '44px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '0.6rem',
+      }}
+      className={`fixed top-1/2 z-30 -translate-y-1/2 font-serif ${isNext ? 'right-[1.4vw]' : 'left-[1.4vw]'}`}
     >
       <motion.span
         animate={reduced ? { x: 0 } : { x: drift }}

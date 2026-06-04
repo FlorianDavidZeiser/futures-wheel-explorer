@@ -94,13 +94,30 @@ export function UnitView({ unit, beat, reduced, profession, setProfession, onNex
 
   return (
     <div
-      className="flex h-full w-full flex-col items-center justify-center px-6 pt-[15svh] pb-[7svh]"
+      className="flex h-full w-full flex-col items-center justify-center px-6 pt-[12svh] pb-[7svh]"
       style={paletteVars(palette)}
     >
       <SceneBox patina={unit.patina}>{scene}</SceneBox>
 
+      {/* Museales Vitrinen-Schild, Ort und Jahr, erdet die Welt konkret. In Inter
+          (Beschriftungsebene), ueber die Beats konstant. */}
+      {isStation && (
+        <div
+          className="mt-[2.6svh] font-sans"
+          style={{
+            color: 'var(--ink-faint)',
+            fontSize: '0.72rem',
+            letterSpacing: '0.16em',
+            textTransform: 'uppercase',
+          }}
+        >
+          {station!.place} · {unit.year}
+        </div>
+      )}
+
       <div
-        className="mt-[5svh] flex w-full max-w-2xl flex-col items-center text-center"
+        className="no-scrollbar mt-[3.4svh] flex w-full max-w-2xl flex-col items-center text-center"
+        data-scroll
         style={{ maxHeight: '40svh', overflowY: 'auto' }}
       >
         <motion.h2
@@ -159,7 +176,7 @@ export function UnitView({ unit, beat, reduced, profession, setProfession, onNex
             <motion.p
               initial={{ opacity: 0, y: reduced ? 0 : 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: reduced ? 0.4 : 2.4, ease: 'easeOut', delay: reduced ? 0.3 : 1.4 }}
+              transition={{ duration: reduced ? 0.4 : 2.2, ease: 'easeOut', delay: reduced ? 0.3 : 1 }}
               className="mt-[4svh] font-serif"
               style={{
                 color: 'var(--ink-soft)',
@@ -175,7 +192,7 @@ export function UnitView({ unit, beat, reduced, profession, setProfession, onNex
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: reduced ? 0.4 : 1.6, ease: 'easeOut', delay: reduced ? 0.6 : 4.6 }}
+              transition={{ duration: reduced ? 0.4 : 1.6, ease: 'easeOut', delay: reduced ? 0.6 : 3.2 }}
               className="mt-[5svh]"
             >
               <Button variant="ghost" onClick={onRestart}>

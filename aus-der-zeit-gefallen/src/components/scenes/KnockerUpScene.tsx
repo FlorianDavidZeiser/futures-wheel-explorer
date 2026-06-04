@@ -57,8 +57,8 @@ export function KnockerUpScene({ palette, reduced, active = true }: SceneProps) 
         transition={still ? undefined : { duration: 7.5, repeat: Infinity, ease: 'easeInOut' }}
       />
       <rect x="690" y="143" width="22" height="30" rx="1.5" fill={glow} opacity={0.95} />
-      <line x1="701" y1="143" x2="701" y2="173" stroke={bgDeep} strokeWidth={1} />
-      <line x1="690" y1="158" x2="712" y2="158" stroke={bgDeep} strokeWidth={1} />
+      <line x1="701" y1="143" x2="701" y2="173" stroke={bgDeep} strokeWidth={1} vectorEffect="non-scaling-stroke" />
+      <line x1="690" y1="158" x2="712" y2="158" stroke={bgDeep} strokeWidth={1} vectorEffect="non-scaling-stroke" />
 
       {/* Nasses Pflaster, eine ruhige Spiegelung des Lichts. */}
       <rect x="150" y="360" width="490" height="100" fill="url(#ku-wet)" />

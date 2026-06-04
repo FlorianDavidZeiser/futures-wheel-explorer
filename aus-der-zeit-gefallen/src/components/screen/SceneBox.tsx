@@ -11,7 +11,7 @@ export function SceneBox({ children, patina }: { children: ReactNode; patina: nu
       style={{
         maxWidth: '40rem',
         aspectRatio: '800 / 460',
-        maxHeight: '42svh',
+        maxHeight: '38svh',
         margin: '0 auto',
       }}
     >

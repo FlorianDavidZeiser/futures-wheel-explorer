@@ -42,7 +42,7 @@ export function SwitchboardScene({ palette, reduced, active = true }: SceneProps
 
       {/* Die Wand aus Klinkenfeldern, ruhiges geometrisches Muster. */}
       <rect x={x0 - 30} y={y0 - 28} width={cols * dx + 16} height={rows * dy + 20} rx="5" fill={bgDeep} opacity={0.5} />
-      <rect x={x0 - 30} y={y0 - 28} width={cols * dx + 16} height={rows * dy + 20} rx="5" fill="none" stroke={accentSoft} strokeWidth={1} opacity={0.35} />
+      <rect x={x0 - 30} y={y0 - 28} width={cols * dx + 16} height={rows * dy + 20} rx="5" fill="none" stroke={accentSoft} strokeWidth={1} opacity={0.35} vectorEffect="non-scaling-stroke" />
 
       {/* Das eine gemeinsame Glimmen, hinter den verbundenen Feldern. */}
       <motion.g
