@@ -91,7 +91,7 @@ export const stations: StationContent[] = [
   },
   {
     id: 'computer',
-    year: 1950,
+    year: 1958,
     place: 'Langley',
     // FORM: Fakt, kuehl und trocken gesetzt, kein Pathos. PLATZHALTER, final
     // vom Auftraggeber.

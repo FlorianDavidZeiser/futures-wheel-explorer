@@ -95,7 +95,7 @@ export const palettes: Record<LookId, Palette> = {
     patinaBase: 0.16,
   },
 
-  // 1950. Fast kalt. Nuechternes Grau, fahles Papiergruen, sachliches Licht.
+  // 1958. Fast kalt. Nuechternes Grau, fahles Papiergruen, sachliches Licht.
   computer: {
     bg: '#161a18',
     bgDeep: '#0c100e',
@@ -126,7 +126,7 @@ export const palettes: Record<LookId, Palette> = {
 // Stuetzpunkte des Temperaturbogens, an die Jahreszahl gebunden. Zwischen ihnen
 // kuehlt die Farbwelt waehrend des Scrollens ruhig und stetig ab. Jenseits von
 // 2026 bleibt es beim kalten Heute, die Patina altert dann nur das Bild.
-export const ARC_YEARS = [1850, 1890, 1930, 1950, 2026];
+export const ARC_YEARS = [1850, 1890, 1930, 1958, 2026];
 export const ARC_LOOKS: LookId[] = ['lamplighter', 'knockerup', 'switchboard', 'computer', 'today'];
 
 /** Liefert die Farbwerte eines Feldes ueber alle Stuetzpunkte des Bogens. */

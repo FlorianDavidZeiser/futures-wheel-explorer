@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { SCENE_VIEWBOX, type SceneProps } from './sceneTypes';
 
-// 1950. Ein nuechterner Raum, angedeutete Tischreihen, eine gebeugte Silhouette
+// 1958. Ein nuechterner Raum, angedeutete Tischreihen, eine gebeugte Silhouette
 // ueber Papier, dahinter eine zweite, kleinere fuer Saaltiefe. Die eine Bewegung
 // ist die sich ganz langsam, fast erstarrt fuellende Tabelle aus Ziffern. Die
 // kaelteste, ruhigste Szene.
