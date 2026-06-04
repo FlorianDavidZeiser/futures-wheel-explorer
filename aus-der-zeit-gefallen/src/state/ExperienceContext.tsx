@@ -1,13 +1,10 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
 
-// Schlanker State. Gespeichert werden der eingegebene Beruf und ob die Reise
-// begonnen hat. Der runKey setzt das Stueck fuer "noch einmal" sauber zurueck.
+// Schlanker State. Gespeichert wird nur der eingegebene Beruf. Der Ablauf selbst
+// liegt als Screen-Index in der Buehne. reset leert den Beruf fuer "noch einmal".
 interface ContextValue {
   profession: string;
   setProfession: (value: string) => void;
-  started: boolean;
-  setStarted: (value: boolean) => void;
-  runKey: number;
   reset: () => void;
 }
 
@@ -15,22 +12,12 @@ const ExperienceContext = createContext<ContextValue | null>(null);
 
 export function ExperienceProvider({ children }: { children: ReactNode }) {
   const [profession, setProfession] = useState('');
-  const [started, setStarted] = useState(false);
-  const [runKey, setRunKey] = useState(0);
 
   const reset = useCallback(() => {
     setProfession('');
-    setStarted(false);
-    setRunKey((k) => k + 1);
-    if (typeof window !== 'undefined') {
-      window.scrollTo({ top: 0, behavior: 'auto' });
-    }
   }, []);
 
-  const value = useMemo(
-    () => ({ profession, setProfession, started, setStarted, runKey, reset }),
-    [profession, started, runKey, reset]
-  );
+  const value = useMemo(() => ({ profession, setProfession, reset }), [profession, reset]);
 
   return <ExperienceContext.Provider value={value}>{children}</ExperienceContext.Provider>;
 }

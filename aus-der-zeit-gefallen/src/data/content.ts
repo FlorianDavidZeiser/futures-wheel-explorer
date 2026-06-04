@@ -64,9 +64,9 @@ export const stations: StationContent[] = [
       'Die Fabriksirene duldet keine Verspätung, eine Uhr kostet mehr, als eine Woche Arbeit einbringt, und das Radio gibt es noch nicht. Wie also weckst du eine ganze Stadt voller Arbeiter auf die Minute?',
     profession: 'Der Weckdienst',
     story:
-      'Außer sonntags bin ich um drei auf den Beinen. Mein Rohr, eine Handvoll getrockneter Erbsen, und los durch die nassen Gassen. Ich schieße sie ans Glas, bis oben einer ans Fenster tritt und nickt, erst dann gehe ich weiter, nicht eher. Sechs Pence die Woche. Der Alte drei Meilen weiter macht es mit einer Angelrute, aber meine Erbsen treffen sicherer. Mich weckt keiner. Es ist ein gutes Geschäft, denke ich, solange Menschen zur Schicht müssen.',
+      'Außer sonntags ist sie um drei auf den Beinen. Ein Rohr, eine Handvoll getrockneter Erbsen, und los durch die nassen Gassen. Sie schießt sie ans Glas, bis oben einer ans Fenster tritt und nickt, erst dann geht sie weiter, nicht eher. Sechs Pence die Woche. Der Alte drei Meilen weiter macht es mit einer Angelrute, aber ihre Erbsen treffen sicherer. Sie weckt die halbe Straße, und sie selbst weckt niemand. Ein gutes Geschäft, denkt sie, solange Menschen zur Schicht müssen.',
     aftermath:
-      'Dann liegt in den Schlafzimmern ein kleines Ding mit zwei Glocken obendrauf. Es klingelt von allein. Es kostet einmal, was ich in Wochen verdiene, und dann nie wieder. Meine Runde wird kürzer. Erst dieses Fenster, dann jenes, niemand wartet mehr auf die Erbse. Am Ende bin ich eine der Letzten, die das noch macht. Dann macht es keiner mehr.',
+      'Dann liegt in den Schlafzimmern ein kleines Ding mit zwei Glocken obendrauf. Es klingelt von allein. Es kostet einmal, was sie in Wochen verdient, und dann nie wieder. Ihre Runde wird kürzer. Erst dieses Fenster, dann jenes, niemand wartet mehr auf die Erbse. Am Ende ist sie eine der Letzten, die das noch macht. Dann macht es keiner mehr.',
   },
   {
     id: 'switchboard',
@@ -78,9 +78,9 @@ export const stations: StationContent[] = [
       'Klick. Stecker raus, Stecker rein. Im Kino reden die Bilder seit Kurzem, auf der Straße fahren mehr Automobile als Pferde, und jedes Telefonat der Stadt geht durch eine Hand an einer Wand aus Kabeln, lange bevor du weißt, in welchem Jahr du stehst.',
     profession: 'Das Fräulein vom Amt',
     story:
-      'Nummer bitte, sagst du, hundertmal in der Stunde. Du kennst keine Nummern, du kennst Namen, jeden Teilnehmer der Stadt trägst du im Kopf. Du ziehst den Stecker, verbindest zwei Menschen, hörst den ersten Satz, ziehst den nächsten. Schwarzes Kleid, kein Schmuck, an manchen Tagen Rollschuhe, damit du schneller ans Ende der Wand kommst. Durch deine Hände geht jedes Gespräch dieser Stadt. Ohne dich redet hier niemand mit niemandem.',
+      'Nummer bitte, sagt sie, hundertmal in der Stunde. Sie kennt keine Nummern, sie kennt Namen, jeden Teilnehmer der Stadt trägt sie im Kopf. Sie zieht den Stecker, verbindet zwei Menschen, hört den ersten Satz, zieht den nächsten. Schwarzes Kleid, kein Schmuck, an manchen Tagen Rollschuhe, damit sie schneller ans Ende der Wand kommt. Durch ihre Hände geht jedes Gespräch dieser Stadt. Ohne sie redet hier niemand mit niemandem.',
     aftermath:
-      'An einem Mittwoch im Oktober, halb zwei am Nachmittag, legt jemand einen Hebel um. Von da an stecken sich die Gespräche selbst. Du stehst auf, nimmst deinen Mantel, gehst. Die Wand aus Kabeln wird still. Und wenn heute eine Stimme vom Band dich bittet zu warten, ist es fast immer eine Frauenstimme. Mehr ist von dir geblieben.',
+      'An einem Mittwoch im Oktober, halb zwei am Nachmittag, legt jemand einen Hebel um. Von da an stecken sich die Gespräche selbst. Sie steht auf, nimmt ihren Mantel, geht. Die Wand aus Kabeln wird still. Und wenn heute eine Stimme vom Band darum bittet, in der Leitung zu bleiben, ist es fast immer eine Frauenstimme. Mehr ist von ihr geblieben.',
   },
   {
     id: 'computer',

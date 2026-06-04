@@ -4,43 +4,42 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  scroll-behavior: smooth;
-  -webkit-text-size-adjust: 100%;
-  /* Ruhiges Scrollen, kein Gummiband an den Raendern der Reise. */
-  overscroll-behavior-y: none;
+/* Das Stueck ist ein festes, horizontales Deck. Kein Seiten-Scrollen. */
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
 }
 
-#root {
-  min-height: 100%;
+html {
+  -webkit-text-size-adjust: 100%;
+  overscroll-behavior: none;
 }
 
 body {
   margin: 0;
   background: var(--bg-deep);
-  -webkit-tap-highlight-color: transparent;
   color: var(--ink);
   font-family: var(--serif);
-  /* Keine automatische Typografie. Normale Striche bleiben normale Striche. */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+  /* Horizontale Wischgesten gehoeren dem Deck, nicht dem Browser. */
+  touch-action: pan-y;
 }
 
-/* Funktionale Elemente in ruhiger Sans. */
 button,
 input {
   font-family: var(--sans);
 }
 
-/* Ruhige, zurueckhaltende Textauswahl. */
 ::selection {
   background: var(--accent-soft);
   color: var(--ink);
 }
 
-/* Der dezente Fokusring fuer Tastaturbedienung, ohne Laerm. */
 :focus-visible {
   outline: 1px solid var(--glow);
   outline-offset: 3px;
