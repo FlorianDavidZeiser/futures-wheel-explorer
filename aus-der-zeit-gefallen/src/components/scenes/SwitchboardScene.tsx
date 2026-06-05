@@ -1,12 +1,13 @@
 import { motion } from 'framer-motion';
 import { SCENE_VIEWBOX, type SceneProps } from './sceneTypes';
 
-// 1930. Ein Innenraum, eine grosse Wand aus Klinkenfeldern als geometrisches
-// Muster, eine Frau mit Kopfhoerer, ein gestecktes Kabel. Die eine Bewegung ist
-// ein ruhiges, gemeinsames Glimmen der Verbindungslichter, ein einziger Atem.
-export function SwitchboardScene({ palette, reduced, active = true }: SceneProps) {
+// 1930. Ein Innenraum, eine grosse Wand aus Klinkenfeldern. Die Kernbewegung ist
+// die Hand, die ein Kabel ins Feld steckt, ein Laempchen leuchtet auf. Im dritten
+// Beat verschwindet die Hand, das Kabel haengt still, die Lichter bleiben.
+export function SwitchboardScene({ palette, reduced, active = true, beat = 0 }: SceneProps) {
   const { bg, bgDeep, glow, accent, accentSoft } = palette;
   const still = reduced || !active;
+  const aged = beat >= 2;
 
   const cols = 14;
   const rows = 6;
@@ -15,11 +16,10 @@ export function SwitchboardScene({ palette, reduced, active = true }: SceneProps
   const dx = 44;
   const dy = 32;
 
-  // Wenige Felder tragen ein Indikatorlicht, alle im selben ruhigen Rhythmus.
   const lit = new Set(['1-2', '3-8', '0-11', '4-5', '2-13', '5-1']);
 
   return (
-    <svg viewBox={SCENE_VIEWBOX} className="h-full w-full" role="img" aria-label="Ein Fräulein vom Amt am Klinkenfeld, ein Kabel ist gesteckt.">
+    <svg viewBox={SCENE_VIEWBOX} className="h-full w-full" role="img" aria-label="Ein Fräulein vom Amt steckt am Klinkenfeld ein Kabel.">
       <defs>
         <linearGradient id="sb-room" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor={bg} />
@@ -37,17 +37,16 @@ export function SwitchboardScene({ palette, reduced, active = true }: SceneProps
       </defs>
 
       <rect x="0" y="0" width="800" height="460" fill="url(#sb-room)" />
-      {/* Sanfter Lichtfall von oben auf die Wand. */}
       <rect x="0" y="0" width="800" height="240" fill={glow} opacity={0.04} />
 
-      {/* Die Wand aus Klinkenfeldern, ruhiges geometrisches Muster. */}
       <rect x={x0 - 30} y={y0 - 28} width={cols * dx + 16} height={rows * dy + 20} rx="5" fill={bgDeep} opacity={0.5} />
       <rect x={x0 - 30} y={y0 - 28} width={cols * dx + 16} height={rows * dy + 20} rx="5" fill="none" stroke={accentSoft} strokeWidth={1} opacity={0.35} vectorEffect="non-scaling-stroke" />
 
-      {/* Das eine gemeinsame Glimmen, hinter den verbundenen Feldern. */}
+      {/* A2 und A4, das gemeinsame Glimmen der Verbindungen, beim Eintreten aufgehend. */}
       <motion.g
-        animate={still ? { opacity: 0.55 } : { opacity: [0.25, 0.7, 0.35, 0.6, 0.25] }}
-        transition={still ? undefined : { duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+        initial={still ? false : { opacity: 0 }}
+        animate={still ? { opacity: 0.55 } : { opacity: [0, 0.55, 0.25, 0.7, 0.35, 0.6, 0.25] }}
+        transition={still ? { duration: 0 } : { duration: 9, repeat: Infinity, ease: 'easeInOut', times: [0, 0.14, 0.3, 0.45, 0.62, 0.8, 1] }}
       >
         {[...lit].map((key) => {
           const [r, c] = key.split('-').map(Number);
@@ -71,21 +70,40 @@ export function SwitchboardScene({ palette, reduced, active = true }: SceneProps
         })
       )}
 
-      {/* Ein gestecktes Kabel, ruhig, still. */}
-      <path d="M322 300 Q 408 342 470 158" stroke={glow} strokeWidth={2.2} fill="none" opacity={0.7} strokeLinecap="round" />
-      <circle cx="470" cy="158" r="5" fill="#fff0cc" opacity={0.9} />
+      {/* A1 und A5, das Kabel. Im Betrieb gesteckt, im Nachher haengt es still herab. */}
+      <motion.path
+        stroke={glow} strokeWidth={2.2} fill="none" opacity={0.7} strokeLinecap="round"
+        initial={false}
+        animate={{ d: aged ? 'M322 300 Q 360 392 360 432' : 'M322 300 Q 408 342 470 158' }}
+        transition={{ duration: reduced ? 0.3 : 1.8, ease: 'easeInOut' }}
+      />
+      <motion.circle
+        r="5" fill="#fff0cc"
+        initial={false}
+        animate={aged ? { cx: 360, cy: 432, opacity: 0.6 } : { cx: 470, cy: 158, opacity: 0.9 }}
+        transition={{ duration: reduced ? 0.3 : 1.8, ease: 'easeInOut' }}
+      />
 
-      {/* Bodenschatten als Tiefe. */}
       <rect x="0" y="392" width="800" height="68" fill="url(#sb-floor)" />
 
-      {/* Die Frau mit Kopfhoerer im Vordergrund. */}
-      <g fill={bgDeep}>
+      {/* A5, die Frau mit Kopfhoerer im Vordergrund, verblasst im Nachher. */}
+      <motion.g
+        fill={bgDeep}
+        initial={false}
+        animate={{ opacity: aged ? 0 : 1 }}
+        transition={{ duration: reduced ? 0.3 : 1.8, ease: 'easeInOut' }}
+      >
         <path d="M250 360 C 252 326, 244 296, 268 286 C 292 278, 318 286, 326 308 C 332 326, 330 344, 332 360 Z" />
         <circle cx="296" cy="266" r="20" />
         <path d="M278 258 Q 296 236 314 258" stroke={bgDeep} strokeWidth={3} fill="none" />
         <circle cx="278" cy="266" r="5" />
-        <path d="M312 312 Q 322 300 322 296" stroke={bgDeep} strokeWidth={7} fill="none" strokeLinecap="round" />
-      </g>
+        {/* A1, der Arm hebt sich leicht im Takt des Steckens. */}
+        <motion.path
+          d="M312 312 Q 322 300 322 296" stroke={bgDeep} strokeWidth={7} fill="none" strokeLinecap="round"
+          animate={still ? undefined : { d: ['M312 312 Q 322 300 322 296', 'M312 312 Q 326 292 330 286', 'M312 312 Q 322 300 322 296'] }}
+          transition={still ? undefined : { duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      </motion.g>
     </svg>
   );
 }

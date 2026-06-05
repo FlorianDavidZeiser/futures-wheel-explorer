@@ -1,7 +1,7 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useTransform, type MotionValue } from 'framer-motion';
 import type { CSSProperties } from 'react';
 import { palettes, paletteVars } from '../../styles/palettes';
-import { stations, turn, closingLine, outroActions, type StationId } from '../../data/content';
+import { stations, turn, closingLine, outroActions, headings, type StationId } from '../../data/content';
 import { SceneBox } from './SceneBox';
 import { LamplighterScene } from '../scenes/LamplighterScene';
 import { KnockerUpScene } from '../scenes/KnockerUpScene';
@@ -19,6 +19,13 @@ const sceneFor: Record<StationId, (p: SceneProps) => JSX.Element> = {
   knockerup: KnockerUpScene,
   switchboard: SwitchboardScene,
   computer: HumanComputerScene,
+};
+
+const headingStyle: CSSProperties = {
+  color: 'var(--ink)',
+  fontSize: 'clamp(1.5rem, 3.4vw, 2.25rem)',
+  fontWeight: 400,
+  letterSpacing: '0.01em',
 };
 
 const worldStyle: CSSProperties = {
@@ -47,136 +54,136 @@ interface UnitViewProps {
   setProfession: (v: string) => void;
   onNext: () => void;
   onRestart: () => void;
+  /** Live mitlaufende Patina des Schluss-Laufs. Treibt Bild, Beruf und Fragezeichen. */
+  heutePatina: MotionValue<number>;
+  /** Der Schluss-Lauf ist fertig, die Schlusszeile darf erscheinen. */
+  runDone: boolean;
 }
 
-// Eine Unit, ein Ort. Szene, Jahreszahl und Farbtemperatur bleiben, waehrend sich
-// die Beats im Textbereich an Ort und Stelle abloesen (kleiner Uebergang).
-export function UnitView({ unit, beat, reduced, profession, setProfession, onNext, onRestart }: UnitViewProps) {
+// Eine Unit, ein Ort. Szene, Jahreszahl und Farbe bleiben, waehrend sich die Beats
+// im Textbereich an Ort und Stelle abloesen. Die Ueberschrift wandert mit und
+// erzaehlt den Dreischritt, Welt, Mensch, Wandel.
+export function UnitView({
+  unit,
+  beat,
+  reduced,
+  profession,
+  setProfession,
+  onNext,
+  onRestart,
+  heutePatina,
+  runDone,
+}: UnitViewProps) {
+  // Aging von Beruf und Fragezeichen, live an die Schluss-Patina gebunden.
+  const agedFilter = useTransform(heutePatina, (v) => {
+    const t = Math.max(0, Math.min(1, v));
+    return `sepia(${t.toFixed(3)}) saturate(${(1 - t * 0.35).toFixed(3)}) brightness(${(1 - t * 0.12).toFixed(3)})`;
+  });
+  const markOpacity = useTransform(heutePatina, (v) => 0.2 + 0.8 * Math.max(0, Math.min(1, v)));
+
   if (unit.kind === 'introA') return <IntroA reduced={reduced} onNext={onNext} />;
   if (unit.kind === 'introB') {
     return <IntroB reduced={reduced} profession={profession} setProfession={setProfession} onNext={onNext} />;
   }
 
   const isStation = unit.kind === 'station';
+  const isHeute = !isStation;
   const palette = isStation ? palettes[unit.stationId!] : palettes.today;
+  const station = isStation ? stations.find((s) => s.id === unit.stationId)! : null;
+  const name = profession.trim() || turn.fallbackProfession;
 
-  // Szene der Unit, ueber die Beats konstant.
+  // Szene der Unit, ueber die Beats konstant. Die Station altert intern bei Beat 2.
   const scene = isStation ? (
     (() => {
       const Scene = sceneFor[unit.stationId!];
-      return <Scene palette={palette} reduced={reduced} active />;
+      return <Scene palette={palette} reduced={reduced} active beat={beat} />;
     })()
   ) : (
     <SilhouetteScene palette={palette} reduced={reduced} />
   );
 
-  // Name, Koerpertext und Markierung je Beat.
-  const station = isStation ? stations.find((s) => s.id === unit.stationId)! : null;
-  const name = isStation ? station!.profession : profession.trim() || turn.fallbackProfession;
+  // Patina des Bildes: bei Stationen fest, im Heute live aus dem Schluss-Lauf.
+  const scenePatina = isHeute ? heutePatina : unit.patina;
 
+  // Die mitwandernde Ueberschrift und der Koerpertext je Beat.
+  let heading = '';
   let body = '';
-  if (isStation) body = beat === 0 ? station!.worldEntry : beat === 1 ? station!.story : station!.aftermath;
-  else if (unit.isHeute) body = beat === 0 ? turn.todayLine : '';
+  if (isStation) {
+    heading = beat === 0 ? `${station!.place}, ${unit.year}` : beat === 1 ? station!.profession : headings.change;
+    body = beat === 0 ? station!.worldEntry : beat === 1 ? station!.story : station!.aftermath;
+  } else {
+    heading = beat === 0 ? headings.today : name;
+    body = beat === 0 ? turn.todayLine : '';
+  }
+  const headingAges = isHeute && beat === 2;
+  const bodyIsWorld = beat === 0;
+  const markVisible = isHeute && beat === 2;
 
-  const bodyIsWorld = beat === 0; // Welt-Einstieg bzw. Heute-Zeile groesser gesetzt.
-
-  // Sichtbarkeiten, abhaengig vom Beat.
-  const nameVisible = isStation ? beat >= 1 : unit.isHeute ? beat >= 1 : true;
-  const markVisible = isStation ? false : unit.isHeute ? beat >= 2 : true;
-
-  const t = Math.max(0, Math.min(1, unit.patina));
-  const aged = isStation
-    ? undefined
-    : `sepia(${t.toFixed(3)}) saturate(${(1 - t * 0.35).toFixed(3)}) brightness(${(1 - t * 0.12).toFixed(3)})`;
-  const markOpacity = isStation ? 0 : 0.2 + 0.8 * t;
-
-  const small = reduced ? { duration: 0.3, ease: 'easeOut' as const } : { duration: 0.5, ease: [0.22, 0.61, 0.36, 1] as const };
+  const small = reduced
+    ? { duration: 0.3, ease: 'easeOut' as const }
+    : { duration: 0.5, ease: [0.22, 0.61, 0.36, 1] as const };
 
   return (
     <div
       className="flex h-full w-full flex-col items-center justify-center px-6 pt-[12svh] pb-[7svh]"
       style={paletteVars(palette)}
     >
-      <SceneBox patina={unit.patina}>{scene}</SceneBox>
-
-      {/* Museales Vitrinen-Schild, Ort und Jahr, erdet die Welt konkret. In Inter
-          (Beschriftungsebene), ueber die Beats konstant. */}
-      {isStation && (
-        <div
-          className="mt-[2.6svh] font-sans"
-          style={{
-            color: 'var(--ink-faint)',
-            fontSize: '0.72rem',
-            letterSpacing: '0.16em',
-            textTransform: 'uppercase',
-          }}
-        >
-          {station!.place} · {unit.year}
-        </div>
-      )}
+      <SceneBox patina={scenePatina}>{scene}</SceneBox>
 
       <div
-        className="no-scrollbar mt-[3.4svh] flex w-full max-w-2xl flex-col items-center text-center"
+        className="no-scrollbar mt-[4svh] flex w-full max-w-2xl flex-col items-center text-center"
         data-scroll
-        style={{ maxHeight: '40svh', overflowY: 'auto' }}
+        style={{ maxHeight: '44svh', overflowY: 'auto' }}
       >
-        <motion.h2
-          initial={false}
-          animate={{ opacity: nameVisible ? 1 : 0 }}
-          transition={small}
-          className="mb-[2.4svh] font-serif"
-          style={{
-            color: 'var(--ink)',
-            fontSize: 'clamp(1.5rem, 3.4vw, 2.25rem)',
-            fontWeight: 400,
-            letterSpacing: '0.01em',
-            filter: aged,
-            minHeight: '1.2em',
-          }}
-        >
-          {name}
-        </motion.h2>
-
-        <div className="flex min-h-[6svh] w-full items-start justify-center">
-          <AnimatePresence mode="wait">
-            {body ? (
-              <motion.p
-                key={`${unit.key}-${beat}`}
-                initial={{ opacity: 0, y: reduced ? 0 : 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: reduced ? 0 : -6 }}
-                transition={small}
-                className="font-serif"
-                style={bodyIsWorld ? worldStyle : proseStyle}
-              >
+        {/* Ueberschrift und Koerpertext loesen sich gemeinsam ab (kleiner Uebergang). */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`${unit.key}-${beat}`}
+            initial={{ opacity: 0, y: reduced ? 0 : 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: reduced ? 0 : -6 }}
+            transition={small}
+            className="flex w-full flex-col items-center"
+          >
+            <motion.h2
+              className="mb-[2.4svh] font-serif"
+              style={{ ...headingStyle, filter: headingAges ? agedFilter : undefined }}
+            >
+              {heading}
+            </motion.h2>
+            {body && (
+              <p className="font-serif" style={bodyIsWorld ? worldStyle : proseStyle}>
                 {body}
-              </motion.p>
-            ) : null}
-          </AnimatePresence>
-        </div>
+              </p>
+            )}
+          </motion.div>
+        </AnimatePresence>
 
-        <motion.span
-          initial={false}
-          animate={{ opacity: markVisible ? markOpacity : 0 }}
-          transition={small}
-          className="mt-[2svh] font-serif"
-          style={{
-            color: 'var(--ink-faint)',
-            fontSize: 'clamp(1.3rem, 2vw, 1.6rem)',
-            lineHeight: 1.4,
-            fontWeight: 300,
-            filter: aged,
-          }}
-        >
-          {turn.mark}
-        </motion.span>
+        {/* Die Nachher-Stelle der Heute-Station, ein langsam einblendendes Fragezeichen. */}
+        {markVisible && (
+          <motion.span
+            className="mt-[2.6svh] font-serif"
+            style={{
+              color: 'var(--ink-faint)',
+              fontSize: 'clamp(1.3rem, 2vw, 1.6rem)',
+              lineHeight: 1.4,
+              fontWeight: 300,
+              opacity: markOpacity,
+              filter: agedFilter,
+            }}
+          >
+            {turn.mark}
+          </motion.span>
+        )}
 
-        {unit.showClosing && (
+        {/* Der Klappmoment ist der Schlusspunkt. Nach 2070 die Schlusszeile, dann
+            sehr dezent nur die Moeglichkeit, noch einmal zu beginnen. */}
+        {runDone && (
           <>
             <motion.p
               initial={{ opacity: 0, y: reduced ? 0 : 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: reduced ? 0.4 : 2.2, ease: 'easeOut', delay: reduced ? 0.3 : 1 }}
+              transition={{ duration: reduced ? 0.4 : 2.4, ease: 'easeOut' }}
               className="mt-[4svh] font-serif"
               style={{
                 color: 'var(--ink-soft)',
@@ -192,7 +199,7 @@ export function UnitView({ unit, beat, reduced, profession, setProfession, onNex
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: reduced ? 0.4 : 1.6, ease: 'easeOut', delay: reduced ? 0.6 : 3.2 }}
+              transition={{ duration: reduced ? 0.4 : 1.6, ease: 'easeOut', delay: reduced ? 0.5 : 2.4 }}
               className="mt-[5svh]"
             >
               <Button variant="ghost" onClick={onRestart}>

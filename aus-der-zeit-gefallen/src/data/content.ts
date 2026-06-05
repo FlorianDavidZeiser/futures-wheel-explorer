@@ -140,3 +140,14 @@ export const closingLine =
 export const outroActions = {
   again: 'noch einmal',
 } as const;
+
+// Die mitwandernden Ueberschriften erzaehlen schon den Dreischritt: Welt (Ort und
+// Jahr), Mensch (der Beruf), Wandel (ein knappes Wort, das das Verschwinden nur
+// leise andeutet, nie erklaert, was abloeste).
+export const headings = {
+  /** Beat 3, der Wandel. Deutet leise auf das Danach. */
+  change: 'Was blieb',
+  /** Welt-Beat der Heute-Station. */
+  today: 'Heute',
+} as const;
+

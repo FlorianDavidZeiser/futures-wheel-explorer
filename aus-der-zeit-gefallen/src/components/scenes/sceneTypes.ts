@@ -9,6 +9,11 @@ export interface SceneProps {
    * erst dann, nicht vorher. Standard true.
    */
   active?: boolean;
+  /**
+   * Der aktuelle Beat (0 Welt, 1 Mensch, 2 Wandel). Bei Beat 2 altert die Szene
+   * sichtbar mit und erzaehlt den Wandel, nicht nur der Text.
+   */
+  beat?: number;
 }
 
 // Gemeinsames Seitenverhaeltnis aller lebenden Bilder.

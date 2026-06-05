@@ -7,18 +7,18 @@ import { stations, type StationId } from './data/content';
 export interface Unit {
   key: string;
   kind: 'introA' | 'introB' | 'station' | 'silhouette';
-  /** Feste Jahreszahl der Unit, konstant ueber ihre Beats. */
+  /** Feste Jahreszahl der Unit. Bei der Heute-Unit der Startwert, von dem aus die
+   *  Zeit im letzten Beat weiterlaeuft. */
   year: number | null;
   look: LookId;
-  /** Museale Patina, konstant innerhalb der Unit. */
+  /** Museale Patina der Station. Bei der Heute-Unit treibt sie der Schluss-Lauf. */
   patina: number;
   /** Zahl der Beats, die sich an diesem Ort nacheinander zeigen. */
   beatCount: number;
   stationId?: StationId;
-  /** Heute-Unit, entfaltet sich in drei Beats wie eine Station. */
+  /** Die Heute-Unit, der Nutzer selbst. Beat 0 Heute, Beat 1 der eigene Beruf,
+   *  Beat 2 das fliessende Hochlaufen der Zeit bis 2070 mit Schlusszeile. */
   isHeute?: boolean;
-  /** Ausklang, zeigt nach einer Stille die Schlusszeile und noch einmal. */
-  showClosing?: boolean;
 }
 
 function build(): Unit[] {
@@ -38,24 +38,18 @@ function build(): Unit[] {
     });
   }
 
-  // Die Heute-Station, gleicher Drei-Beat-Rahmen.
+  // Die Heute-Station, der Nutzer selbst. Drei Beats: Heute, der eigene Beruf,
+  // und dann, im selben Bild, das Hochlaufen der Zeit bis 2070 mit der
+  // Schlusszeile. Kein weiterer Screen danach.
   out.push({ key: 'heute', kind: 'silhouette', year: 2026, look: 'today', patina: 0, beatCount: 3, isHeute: true });
-
-  // Die Wendung, jeder Schritt ein grosser Uebergang, Jahr und Patina steigen.
-  const wendung = [
-    { year: 2030, patina: 0.22 },
-    { year: 2035, patina: 0.42 },
-    { year: 2045, patina: 0.62 },
-    { year: 2060, patina: 0.82 },
-  ];
-  for (const w of wendung) {
-    out.push({ key: `w${w.year}`, kind: 'silhouette', year: w.year, look: 'today', patina: w.patina, beatCount: 1 });
-  }
-
-  // Bei 2070 Halt, dann der Ausklang.
-  out.push({ key: 'ausklang', kind: 'silhouette', year: 2070, look: 'today', patina: 1, beatCount: 1, showClosing: true });
 
   return out;
 }
 
 export const units: Unit[] = build();
+
+// Der Schluss-Lauf der Jahreszahl im letzten Beat der Heute-Unit.
+export const RUN = {
+  startYear: 2026,
+  endYear: 2070,
+} as const;

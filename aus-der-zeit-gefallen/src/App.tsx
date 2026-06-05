@@ -10,7 +10,7 @@ import {
 import { useExperience } from './state/ExperienceContext';
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion';
 import { palettes } from './styles/palettes';
-import { units, type Unit } from './units';
+import { units, RUN, type Unit } from './units';
 import { stations, intro, turn, closingLine } from './data/content';
 import { YearHud } from './components/ui/YearHud';
 import { Forward } from './components/ui/Forward';
@@ -23,7 +23,7 @@ const BIG = 860; // ms, grosser Uebergang, zwischen Stationen.
 // Die Buehne. Eine einzige Vorwaerts-Linie. Innerhalb einer Unit entfalten sich
 // die Beats an Ort und Stelle (kleiner Uebergang), zwischen Units traegt der
 // grosse Uebergang in eine neue Zeit, mit hochzaehlender Jahreszahl und neuer
-// Farbtemperatur. Der Nutzer waehlt nie eine Richtung, nur vor oder zurueck.
+// Farbtemperatur. Im letzten Beat der Heute-Unit laeuft die Zeit fliessend weiter.
 export function App() {
   const { profession, setProfession, reset } = useExperience();
   const reduced = usePrefersReducedMotion();
@@ -31,8 +31,7 @@ export function App() {
   const [u, setU] = useState(0);
   const [b, setB] = useState(0);
   const [direction, setDirection] = useState(1);
-  // Die einmalige Wisch-Einladung, nur am Anfang, verschwindet nach dem ersten
-  // Weitergehen und kommt nie wieder.
+  const [runDone, setRunDone] = useState(false);
   const [invite, setInvite] = useState(true);
   const uRef = useRef(0);
   const bRef = useRef(0);
@@ -45,10 +44,9 @@ export function App() {
   const unit = units[u];
   const lastU = units.length - 1;
   const atEnd = u === lastU && b >= units[lastU].beatCount - 1;
-  // Ansage fuer Screenreader, bei jedem Beat- und Stationswechsel.
   const announce = announceFor(unit, b, profession);
 
-  // Temperaturbogen und Jahreszahl, ruhig animiert. Nur beim grossen Uebergang.
+  // Temperaturbogen, Jahreszahl und die live mitlaufende Schluss-Patina.
   const bg = useMotionValue(palettes.intro.bg);
   const bgDeep = useMotionValue(palettes.intro.bgDeep);
   const ink = useMotionValue(palettes.intro.ink);
@@ -56,40 +54,92 @@ export function App() {
   const yearMV = useMotionValue(firstYear);
   const yearRounded = useMotionValue(firstYear);
   const hudOpacity = useMotionValue(0);
+  const heutePatina = useMotionValue(0);
   const background = useMotionTemplate`linear-gradient(180deg, ${bg} 0%, ${bgDeep} 100%)`;
 
+  // A6, die Farbtemperatur blendet beim grossen Uebergang sichtbar ueber.
   useEffect(() => {
     const look = palettes[unit.look];
-    const dur = reduced ? 0 : 1.2;
+    const dur = reduced ? 0 : 1.4;
     const cs = [
       animate(bg, look.bg, { duration: dur, ease: 'easeInOut' }),
       animate(bgDeep, look.bgDeep, { duration: dur, ease: 'easeInOut' }),
       animate(ink, look.ink, { duration: dur, ease: 'easeInOut' }),
     ];
-    if (unit.year != null) {
-      const target = unit.year;
-      cs.push(
-        animate(yearMV, target, {
-          duration: reduced ? 0 : 1.1,
-          ease: 'easeOut',
-          onUpdate: (v) => yearRounded.set(Math.round(v)),
-          // Bei schnellem Wischen sauber auf den Zielwert klemmen, kein krummer
-          // Zwischenwert bleibt stehen.
-          onComplete: () => yearRounded.set(target),
-        })
-      );
-    }
-    animate(hudOpacity, unit.year != null ? 1 : 0, { duration: reduced ? 0 : 0.7, ease: 'easeOut' });
     return () => cs.forEach((c) => c.stop());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [u, reduced]);
+
+  // Jahreszahl und Schluss-Lauf. Innerhalb einer Station bleibt das Jahr konstant,
+  // beim grossen Uebergang zaehlt es hoch, und im letzten Heute-Beat laeuft es
+  // fliessend ueber den eigenen Beruf hinweg bis 2070, waehrend die Patina steigt.
+  useEffect(() => {
+    const ho = animate(hudOpacity, unit.year != null ? 1 : 0, { duration: reduced ? 0 : 0.7, ease: 'easeOut' });
+
+    if (unit.year == null) {
+      setRunDone(false);
+      heutePatina.set(0);
+      return () => ho.stop();
+    }
+
+    if (unit.isHeute && b === 2) {
+      // Der fliessende Schluss. Ein ruhiges Weiterwischen loest ihn aus, dann
+      // laeuft die Zeit von selbst, erst zoegerlich, dann unaufhaltsam.
+      setRunDone(false);
+      if (reduced) {
+        yearMV.set(RUN.endYear);
+        yearRounded.set(RUN.endYear);
+        heutePatina.set(1);
+        const t = window.setTimeout(() => setRunDone(true), 300);
+        return () => {
+          ho.stop();
+          window.clearTimeout(t);
+        };
+      }
+      let t = 0;
+      const yc = animate(yearMV, RUN.endYear, {
+        duration: 7.5,
+        ease: [0.5, 0, 0.9, 0.35],
+        onUpdate: (v) => yearRounded.set(Math.round(v)),
+        onComplete: () => {
+          yearRounded.set(RUN.endYear);
+          // Bei 2070 ein Halt, kurze Stille, dann die Schlusszeile.
+          t = window.setTimeout(() => setRunDone(true), 1300);
+        },
+      });
+      const pc = animate(heutePatina, 1, { duration: 6.5, ease: 'easeInOut' });
+      return () => {
+        ho.stop();
+        yc.stop();
+        pc.stop();
+        window.clearTimeout(t);
+      };
+    }
+
+    // Stationen sowie Heute Beat 0 und 1.
+    setRunDone(false);
+    const target = unit.isHeute ? RUN.startYear : unit.year;
+    const yc = animate(yearMV, target, {
+      duration: reduced ? 0 : 1.1,
+      ease: 'easeOut',
+      onUpdate: (v) => yearRounded.set(Math.round(v)),
+      onComplete: () => yearRounded.set(target),
+    });
+    const pc = animate(heutePatina, 0, { duration: reduced ? 0 : 0.4 });
+    return () => {
+      ho.stop();
+      yc.stop();
+      pc.stop();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [u, b, reduced]);
 
   // Eine einzige Vorwaerts- und Rueckwaerts-Logik. Schaltet mal einen Beat, mal,
   // wenn die Unit fertig ist, die naechste Unit als grossen Uebergang.
   const go = useCallback((dir: 1 | -1) => {
     const now = Date.now();
     if (now < lockUntil.current) return;
-    setInvite(false); // Die Einladung weicht beim ersten Weitergehen.
+    setInvite(false);
     const cu = uRef.current;
     const cb = bRef.current;
     if (dir === 1) {
@@ -132,7 +182,6 @@ export function App() {
   // Mausrad und Trackpad.
   useEffect(() => {
     const onWheel = (e: WheelEvent) => {
-      // Langer Text darf vertikal scrollen, ohne dass das Rad navigiert.
       const sc = (e.target as HTMLElement | null)?.closest('[data-scroll]') as HTMLElement | null;
       if (sc && sc.scrollHeight > sc.clientHeight + 1) return;
       e.preventDefault();
@@ -170,13 +219,11 @@ export function App() {
     [next, prev]
   );
 
-  // Tipp auf die rechte Bildhaelfte vor, linke zurueck. Knoepfe und Feld ausnehmen.
+  // Tipp auf die rechte Bildhaelfte vor, linkes Viertel zurueck. Knoepfe und Feld aus.
   const onTap = useCallback(
     (e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
       const el = e.target as HTMLElement | null;
       if (el && el.closest('button, input, a')) return;
-      // Vorwaerts ist die grosse, leichte Zone. Zurueck nur das linke Viertel,
-      // damit niemand beim Antippen zum Weiterlesen versehentlich zurueckspringt.
       if (info.point.x < window.innerWidth * 0.28) prev();
       else next();
     },
@@ -236,6 +283,8 @@ export function App() {
               setProfession={setProfession}
               onNext={next}
               onRestart={restart}
+              heutePatina={heutePatina}
+              runDone={runDone}
             />
           </motion.div>
         </AnimatePresence>
@@ -256,11 +305,7 @@ function announceFor(unit: Unit, beat: number, profession: string): string {
     return `${head}${nm} ${body}`;
   }
   const name = profession.trim() || turn.fallbackProfession;
-  if (unit.isHeute) {
-    if (beat === 0) return `${unit.year}. ${turn.todayLine}`;
-    if (beat === 1) return `${unit.year}. ${name}.`;
-    return `${unit.year}. ${name}. Fragezeichen.`;
-  }
-  const base = `${unit.year}. ${name}.`;
-  return unit.showClosing ? `${base} ${closingLine}` : base;
+  if (beat === 0) return `${unit.year}. ${turn.todayLine}`;
+  if (beat === 1) return `${unit.year}. ${name}.`;
+  return `${name}. ${closingLine}`;
 }
