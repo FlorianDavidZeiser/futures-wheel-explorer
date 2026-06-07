@@ -42,11 +42,27 @@ export function IntroA({ reduced, onNext }: { reduced: boolean; onNext: () => vo
         {intro.title}
       </motion.h1>
 
+      {/* Das Eroeffnungszitat, kleiner und kursiv. */}
+      <motion.p
+        initial={{ opacity: 0, y: reduced ? 0 : 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: reduced ? 0.5 : 1.6, ease: 'easeOut', delay: reduced ? 0.18 : 2.6 }}
+        className="relative mt-5 font-serif italic"
+        style={{
+          color: 'var(--ink-soft)',
+          fontSize: 'clamp(1.05rem, 1.8vw, 1.3rem)',
+          fontWeight: 300,
+          letterSpacing: '0.01em',
+        }}
+      >
+        {intro.quote}
+      </motion.p>
+
       <motion.p
         initial={{ opacity: 0, y: reduced ? 0 : 8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: reduced ? 0.5 : 2, ease: 'easeOut', delay: reduced ? 0.25 : 3 }}
-        className="relative mt-8 font-serif"
+        transition={{ duration: reduced ? 0.5 : 2, ease: 'easeOut', delay: reduced ? 0.3 : 4.2 }}
+        className="relative mt-9 font-serif"
         style={{
           color: 'var(--ink-soft)',
           fontSize: 'clamp(1.02rem, 1.7vw, 1.22rem)',
@@ -64,7 +80,7 @@ export function IntroA({ reduced, onNext }: { reduced: boolean; onNext: () => vo
         onClick={onNext}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: reduced ? 0.5 : 1.6, ease: 'easeOut', delay: reduced ? 0.5 : 5 }}
+        transition={{ duration: reduced ? 0.5 : 1.6, ease: 'easeOut', delay: reduced ? 0.5 : 6.2 }}
         className="absolute bottom-[7svh] flex flex-col items-center font-sans"
         style={{ color: 'var(--ink-faint)' }}
       >

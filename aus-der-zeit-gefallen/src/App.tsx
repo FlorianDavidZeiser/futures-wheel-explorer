@@ -32,6 +32,9 @@ export function App() {
   const [b, setB] = useState(0);
   const [direction, setDirection] = useState(1);
   const [runDone, setRunDone] = useState(false);
+  // Die Stufe der sich selbst entfaltenden Heute-Sequenz: 0 Heute-Zeile,
+  // 1 der eigene Beruf, 2 das Hochlaufen der Zeit. Kein Klick, nur Zeit.
+  const [heuteStage, setHeuteStage] = useState(0);
   const [invite, setInvite] = useState(true);
   const uRef = useRef(0);
   const bRef = useRef(0);
@@ -44,7 +47,9 @@ export function App() {
   const unit = units[u];
   const lastU = units.length - 1;
   const atEnd = u === lastU && b >= units[lastU].beatCount - 1;
-  const announce = announceFor(unit, b, profession);
+  // Im Heute treibt die Zeit die Stufe, sonst der Beat.
+  const effectiveBeat = unit.isHeute ? heuteStage : b;
+  const announce = announceFor(unit, effectiveBeat, profession);
 
   // Temperaturbogen, Jahreszahl und die live mitlaufende Schluss-Patina.
   const bg = useMotionValue(palettes.intro.bg);
@@ -70,69 +75,100 @@ export function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [u, reduced]);
 
-  // Jahreszahl und Schluss-Lauf. Innerhalb einer Station bleibt das Jahr konstant,
-  // beim grossen Uebergang zaehlt es hoch, und im letzten Heute-Beat laeuft es
-  // fliessend ueber den eigenen Beruf hinweg bis 2070, waehrend die Patina steigt.
+  // Die Jahreszahl ist sichtbar, sobald der Vorhang gewichen ist.
   useEffect(() => {
     const ho = animate(hudOpacity, unit.year != null ? 1 : 0, { duration: reduced ? 0 : 0.7, ease: 'easeOut' });
+    return () => ho.stop();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [u, reduced]);
 
-    if (unit.year == null) {
-      setRunDone(false);
-      heutePatina.set(0);
-      return () => ho.stop();
-    }
-
-    if (unit.isHeute && b === 2) {
-      // Der fliessende Schluss. Ein ruhiges Weiterwischen loest ihn aus, dann
-      // laeuft die Zeit von selbst, erst zoegerlich, dann unaufhaltsam.
-      setRunDone(false);
-      if (reduced) {
-        yearMV.set(RUN.endYear);
-        yearRounded.set(RUN.endYear);
-        heutePatina.set(1);
-        const t = window.setTimeout(() => setRunDone(true), 300);
-        return () => {
-          ho.stop();
-          window.clearTimeout(t);
-        };
-      }
-      let t = 0;
-      const yc = animate(yearMV, RUN.endYear, {
-        duration: 7.5,
-        ease: [0.5, 0, 0.9, 0.35],
-        onUpdate: (v) => yearRounded.set(Math.round(v)),
-        onComplete: () => {
-          yearRounded.set(RUN.endYear);
-          // Bei 2070 ein Halt, kurze Stille, dann die Schlusszeile.
-          t = window.setTimeout(() => setRunDone(true), 1300);
-        },
-      });
-      const pc = animate(heutePatina, 1, { duration: 6.5, ease: 'easeInOut' });
-      return () => {
-        ho.stop();
-        yc.stop();
-        pc.stop();
-        window.clearTimeout(t);
-      };
-    }
-
-    // Stationen sowie Heute Beat 0 und 1.
-    setRunDone(false);
-    const target = unit.isHeute ? RUN.startYear : unit.year;
+  // Jahreszahl der Stationen. Innerhalb einer Station konstant, beim grossen
+  // Uebergang zaehlt sie hoch. Intro und Heute werden gesondert behandelt.
+  useEffect(() => {
+    if (unit.year == null || unit.isHeute) return;
+    const target = unit.year;
     const yc = animate(yearMV, target, {
       duration: reduced ? 0 : 1.1,
       ease: 'easeOut',
       onUpdate: (v) => yearRounded.set(Math.round(v)),
       onComplete: () => yearRounded.set(target),
     });
-    const pc = animate(heutePatina, 0, { duration: reduced ? 0 : 0.4 });
+    return () => yc.stop();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [u, reduced]);
+
+  // Der Schluss, eine einzige sich selbst entfaltende Sequenz. Ab dem Erscheinen
+  // des eigenen Berufs gibt es nichts mehr zum Wegklicken, die Zeit laeuft von
+  // selbst ueber den Nutzer hinweg.
+  useEffect(() => {
+    if (!unit.isHeute) {
+      setHeuteStage(0);
+      setRunDone(false);
+      heutePatina.set(0);
+      return;
+    }
+    setHeuteStage(0);
+    setRunDone(false);
+    heutePatina.set(0);
+    const timers: number[] = [];
+    let pc: ReturnType<typeof animate> | undefined;
+
+    // 2. Der Sprung ins Heute, die Jahreszahl zaehlt hoch auf 2026.
+    const leap = animate(yearMV, RUN.startYear, {
+      duration: reduced ? 0 : 1.2,
+      ease: 'easeOut',
+      onUpdate: (v) => yearRounded.set(Math.round(v)),
+      onComplete: () => yearRounded.set(RUN.startYear),
+    });
+
+    if (reduced) {
+      setHeuteStage(2);
+      yearMV.set(RUN.endYear);
+      yearRounded.set(RUN.endYear);
+      heutePatina.set(1);
+      timers.push(window.setTimeout(() => setRunDone(true), 500));
+      return () => {
+        leap.stop();
+        timers.forEach((t) => window.clearTimeout(t));
+      };
+    }
+
+    // 3. Die Heute-Zeile steht (Stage 0). 4. Der eigene Beruf erscheint (Stage 1).
+    timers.push(window.setTimeout(() => setHeuteStage(1), 2600));
+    // 5. Eine Pause, in der bewusst nichts passiert. 6. Dann laeuft die Zeit.
+    timers.push(
+      window.setTimeout(() => {
+        setHeuteStage(2);
+        // 7. Patina und Fragezeichen legen sich synchron zum Hochlaufen.
+        pc = animate(heutePatina, 1, { duration: 8, ease: 'easeInOut' });
+        // Erst zoegerlich, mit spuerbaren Pausen, dann beschleunigend.
+        const steps: [number, number][] = [
+          [2030, 0],
+          [2035, 2600],
+          [2045, 5000],
+          [2060, 6800],
+          [2070, 8000],
+        ];
+        steps.forEach(([yv, at]) =>
+          timers.push(
+            window.setTimeout(() => {
+              yearMV.set(yv);
+              yearRounded.set(yv);
+            }, at)
+          )
+        );
+        // 8. Halt bei 2070, Stille. 9. Dann die Schlusszeile.
+        timers.push(window.setTimeout(() => setRunDone(true), 8000 + 1500));
+      }, 2600 + 3500)
+    );
+
     return () => {
-      ho.stop();
-      yc.stop();
-      pc.stop();
+      leap.stop();
+      pc?.stop();
+      timers.forEach((t) => window.clearTimeout(t));
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [u, b, reduced]);
+  }, [u, reduced]);
 
   // Eine einzige Vorwaerts- und Rueckwaerts-Logik. Schaltet mal einen Beat, mal,
   // wenn die Unit fertig ist, die naechste Unit als grossen Uebergang.
@@ -277,7 +313,7 @@ export function App() {
           >
             <UnitView
               unit={unit}
-              beat={b}
+              beat={effectiveBeat}
               reduced={reduced}
               profession={profession}
               setProfession={setProfession}

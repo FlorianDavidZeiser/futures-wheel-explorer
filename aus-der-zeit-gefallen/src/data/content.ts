@@ -8,9 +8,11 @@
 
 export const intro = {
   title: 'Aus der Zeit gefallen',
+  /** Das Eroeffnungszitat, kleiner und kursiv unter dem Titel. */
+  quote: 'Alles fließt.',
   lead:
-    'Manche Berufe waren einmal selbstverständlich. Jeden Tag gebraucht. Dann über Nacht vergessen. Eine kurze Reise durch Arbeit, die es nicht mehr gibt.',
-  question: 'Eine Frage vorab. Was arbeitest du gerade?',
+    'Nichts bleibt, wie es war. Was heute selbstverständlich ist, war gestern undenkbar. Und ist morgen vergessen.',
+  question: 'Bevor es losgeht, was ist deine aktuelle Tätigkeit?',
   start: 'Beginnen',
   /** Sehr dezenter Hinweis am Ende von Screen A, um selbst weiterzugehen. */
   forward: 'weiter',
@@ -124,7 +126,7 @@ export const turn = {
   /** An der Stelle, wo bei den anderen die Andeutung stand, nur ein Fragezeichen. */
   mark: '?',
   /** Beruf, wenn der Nutzer nichts eingegeben hat. */
-  fallbackProfession: 'deine Arbeit',
+  fallbackProfession: 'deine Tätigkeit',
   // Die Heute-Zeile an der Stelle des Welt-Einstiegs der fuenften Station. Bewusst
   // universell, kein Berufsbild, benennt nur das Gefuehl der Selbstverstaendlichkeit.
   // Spricht keine Lehre aus, die Verbindung stellt die Struktur her, nicht der Text.

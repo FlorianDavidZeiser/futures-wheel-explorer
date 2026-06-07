@@ -38,10 +38,11 @@ function build(): Unit[] {
     });
   }
 
-  // Die Heute-Station, der Nutzer selbst. Drei Beats: Heute, der eigene Beruf,
-  // und dann, im selben Bild, das Hochlaufen der Zeit bis 2070 mit der
-  // Schlusszeile. Kein weiterer Screen danach.
-  out.push({ key: 'heute', kind: 'silhouette', year: 2026, look: 'today', patina: 0, beatCount: 3, isHeute: true });
+  // Die Heute-Station, der Nutzer selbst. EIN Screen, der sich von selbst
+  // entfaltet: Heute-Zeile, der eigene Beruf, eine Pause, dann laeuft die Zeit
+  // ohne Klick bis 2070, Patina und Fragezeichen legen sich, Schlusszeile. Kein
+  // weiterer Screen danach.
+  out.push({ key: 'heute', kind: 'silhouette', year: 2026, look: 'today', patina: 0, beatCount: 1, isHeute: true });
 
   return out;
 }
