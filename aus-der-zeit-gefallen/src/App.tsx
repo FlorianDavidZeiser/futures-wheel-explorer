@@ -60,6 +60,9 @@ export function App() {
   const yearRounded = useMotionValue(firstYear);
   const hudOpacity = useMotionValue(0);
   const heutePatina = useMotionValue(0);
+  // Hebel 7, der dunkle Korridor zwischen den Saelen.
+  const corridor = useMotionValue(0);
+  const firstU = useRef(true);
   const background = useMotionTemplate`linear-gradient(180deg, ${bg} 0%, ${bgDeep} 100%)`;
 
   // A6, die Farbtemperatur blendet beim grossen Uebergang sichtbar ueber.
@@ -81,6 +84,19 @@ export function App() {
     return () => ho.stop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [u, reduced]);
+
+  // Hebel 7, beim grossen Uebergang ein kurzer Gang durchs Dunkle, wie zwischen
+  // zwei Museumssaelen. Nur beim Stationswechsel, nicht bei den Beats.
+  useEffect(() => {
+    if (firstU.current) {
+      firstU.current = false;
+      return;
+    }
+    if (reduced) return;
+    const c = animate(corridor, [0, 0.62, 0], { duration: 0.78, times: [0, 0.42, 1], ease: 'easeInOut' });
+    return () => c.stop();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [u]);
 
   // Jahreszahl der Stationen. Innerhalb einer Station konstant, beim grossen
   // Uebergang zaehlt sie hoch. Intro und Heute werden gesondert behandelt.
@@ -112,6 +128,7 @@ export function App() {
     heutePatina.set(0);
     const timers: number[] = [];
     let pc: ReturnType<typeof animate> | undefined;
+    let runYc: ReturnType<typeof animate> | undefined;
 
     // 2. Der Sprung ins Heute, die Jahreszahl zaehlt hoch auf 2026.
     const leap = animate(yearMV, RUN.startYear, {
@@ -136,35 +153,30 @@ export function App() {
     // 3. Die Heute-Zeile steht (Stage 0). 4. Der eigene Beruf erscheint (Stage 1).
     timers.push(window.setTimeout(() => setHeuteStage(1), 2600));
     // 5. Eine Pause, in der bewusst nichts passiert. 6. Dann laeuft die Zeit.
+    const RUN_MS = 9000;
     timers.push(
       window.setTimeout(() => {
         setHeuteStage(2);
         // 7. Patina und Fragezeichen legen sich synchron zum Hochlaufen.
-        pc = animate(heutePatina, 1, { duration: 8, ease: 'easeInOut' });
-        // Erst zoegerlich, mit spuerbaren Pausen, dann beschleunigend.
-        const steps: [number, number][] = [
-          [2030, 0],
-          [2035, 2600],
-          [2045, 5000],
-          [2060, 6800],
-          [2070, 8000],
-        ];
-        steps.forEach(([yv, at]) =>
-          timers.push(
-            window.setTimeout(() => {
-              yearMV.set(yv);
-              yearRounded.set(yv);
-            }, at)
-          )
-        );
+        pc = animate(heutePatina, 1, { duration: RUN_MS / 1000, ease: 'easeInOut' });
+        // Hebel 3, die Zahl rollt durch die Jahre. Erst traege mit Pausen an den
+        // fruehen Marken, dann beschleunigt sie und zieht davon.
+        runYc = animate(yearMV, [2026, 2030, 2030, 2035, 2035, 2045, 2070], {
+          duration: RUN_MS / 1000,
+          ease: 'linear',
+          times: [0, 0.14, 0.34, 0.46, 0.64, 0.8, 1],
+          onUpdate: (v) => yearRounded.set(Math.round(v)),
+          onComplete: () => yearRounded.set(RUN.endYear),
+        });
         // 8. Halt bei 2070, Stille. 9. Dann die Schlusszeile.
-        timers.push(window.setTimeout(() => setRunDone(true), 8000 + 1500));
+        timers.push(window.setTimeout(() => setRunDone(true), RUN_MS + 1500));
       }, 2600 + 3500)
     );
 
     return () => {
       leap.stop();
       pc?.stop();
+      runYc?.stop();
       timers.forEach((t) => window.clearTimeout(t));
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -279,10 +291,13 @@ export function App() {
   return (
     <>
       <motion.div aria-hidden className="fixed inset-0 -z-10" style={{ background }} />
+      <div aria-hidden className="film-grain" />
 
       <div className="sr-only" aria-live="polite" aria-atomic="true">
         {announce}
       </div>
+
+      <motion.div aria-hidden className="pointer-events-none fixed inset-0 z-20 bg-black" style={{ opacity: corridor }} />
 
       <YearHud value={yearRounded} opacity={hudOpacity} color={ink} />
       <Forward dir="next" onClick={next} visible={!atEnd} color={ink} reduced={reduced} />
