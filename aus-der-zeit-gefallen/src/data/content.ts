@@ -53,7 +53,7 @@ export const stations: StationContent[] = [
     // malt. Keine Jahreszahl am Satzanfang. PLATZHALTER, vom Auftraggeber final.
     worldEntryForm: 'bild',
     worldEntry:
-      'Kohlenrauch hängt über den Dächern. Pferdehufe klackern auf nassem Pflaster. Und nirgends auf der Welt brennt auch nur eine elektrische Lampe. Wenn die Sonne sinkt, fällt die Stadt zurück ins Schwarze, Gasse um Gasse, bis nichts mehr bleibt. Nur der Mond. Wer Licht will, muss es tragen, von Hand, Laterne für Laterne.',
+      'Kohlenrauch hängt über den Dächern. Pferdehufe klackern auf nassem Pflaster. Und nirgends auf der Welt brennt auch nur eine elektrische Lampe. Wenn die Sonne sinkt, fällt die Stadt zurück ins Schwarze, Gasse um Gasse, bis nichts mehr bleibt. Nur der Mond. Wer Licht will, muss es tragen. Von Hand.',
     profession: 'Der Laternenanzünder',
     story:
       'Dreißig Minuten nach Sonnenuntergang geht er los. Immer dieselbe Runde. Laterne für Laterne, die Stange gehoben, ein Zischen, ein Aufflammen, weiter. Hinter ihm glüht eine Kette aus Licht in der blauen Luft, und die Leute am Fenster stellen ihre Uhren nach ihm. Sein Vater ist die Runde gegangen. Er geht die Runde. Sein Sohn wird die Runde gehen. Das ist ausgemacht. Bei Morgengrauen kehrt er zurück und nimmt das Licht wieder mit.',
@@ -68,7 +68,7 @@ export const stations: StationContent[] = [
     // PLATZHALTER, vom Auftraggeber final.
     worldEntryForm: 'frage',
     worldEntry:
-      'Die Fabriksirene heult über die Dächer und duldet keine Verspätung. Eine Uhr kostet mehr, als eine Woche Arbeit einbringt. Das Radio gibt es noch nicht. Wie also weckst du eine ganze Stadt voller Arbeiter auf die Minute?',
+      'Die Fabriksirene heult über die Dächer und duldet keine Verspätung. Eine Uhr kostet mehr, als eine Woche Arbeit einbringt. Das Radio gibt es noch nicht. Wie also weckt man eine ganze Stadt voller Arbeiter auf die Minute?',
     profession: 'Der Weckdienst',
     story:
       'Außer sonntags ist sie um drei auf den Beinen. Ein Rohr, eine Handvoll getrockneter Erbsen, und los durch die nassen Gassen. Sie schießt sie ans Glas, dass es klackt, bis oben einer ans Fenster tritt und nickt. Erst dann geht sie weiter, nicht eher. Sechs Pence die Woche. Der Alte drei Meilen weiter macht es mit einer Angelrute, aber ihre Erbsen treffen sicherer. Sie weckt die halbe Straße. Sie selbst weckt niemand. Ein gutes Geschäft, denkt sie, solange Menschen zur Schicht müssen.',
@@ -83,7 +83,7 @@ export const stations: StationContent[] = [
     // Zeitanker eingewoben, das Jahr erst danach. PLATZHALTER, vom Auftraggeber final.
     worldEntryForm: 'szene',
     worldEntry:
-      'Klick. Stecker raus, Stecker rein. Im Kino reden die Bilder seit Kurzem, auf der Straße knattern mehr Automobile als Pferde. Zwei Menschen wollen miteinander sprechen, doch keine Leitung findet von allein zur anderen. Dazwischen sitzt eine Hand an einer Wand aus Kabeln. Sie steckt die Verbindung, lange bevor du weißt, in welchem Jahr du stehst.',
+      'In den Wohnungen hängt ein neues Gerät an der Wand, aus Holz und Bakelit, und wer hineinspricht, kann eine Stimme vom anderen Ende der Stadt hören. Ein Wunder, das sich rasend verbreitet. Nur eines kann das Wunder nicht. Zwei Leitungen finden nie von allein zueinander.',
     profession: 'Das Fräulein vom Amt',
     story:
       'Nummer bitte, sagt sie, hundertmal in der Stunde. Sie kennt keine Nummern, sie kennt Namen. Sie zieht den Stecker, sie verbindet zwei Menschen, sie hört den ersten Satz, sie zieht den nächsten. Schwarzes Kleid, kein Schmuck, an manchen Tagen rollt sie auf Rollschuhen ans Ende der Wand, damit es schneller geht. Durch ihre Hände läuft jedes Gespräch dieser Stadt. Ohne sie redet hier niemand mit niemandem.',
@@ -98,7 +98,7 @@ export const stations: StationContent[] = [
     // vom Auftraggeber.
     worldEntryForm: 'fakt',
     worldEntry:
-      'Computer war einmal ein Beruf. Kein Gerät. Flugbahnen, Sternenbahnen, ganze Tabellen wollen berechnet werden, und keine Maschine ist schnell genug dafür. Also rechnet ein Mensch. Meist eine Frau, mit Bleistift, Rechenmaschine und Millimeterpapier.',
+      'Die Welt nach dem Krieg rechnet sich in die Zukunft. Düsenflugzeuge, Staudämme, bald der Griff nach dem Himmel. Jede Flugbahn, jede Brücke, jede Tabelle will berechnet sein, auf viele Stellen genau. Und es gibt nichts auf der Welt, das rechnet. Nur Menschen.',
     profession: 'Der menschliche Computer',
     story:
       'Beruf, Computer. Werkzeug, Bleistift, Millimeterpapier, eine Rechenmaschine. Sie liest die Werte unter dem Mikroskop vom Graphen ab und trägt sie ein. Acht Stunden. Dieselbe Gleichung. Eine Flugbahn füllt sechs Notizbücher und dauert eine Woche. Ihre Zahlen entscheiden, ob die Rakete fliegt, und eine Zeit lang traut man ihnen mehr als der neuen Maschine im Nebenraum. Dann schreibt eine von ihnen das Programm für die Maschine. Den Namen Computer gibt sie damit ab.',
@@ -148,7 +148,7 @@ export const outroActions = {
 // leise andeutet, nie erklaert, was abloeste).
 export const headings = {
   /** Beat 3, der Wandel. Deutet leise auf das Danach. */
-  change: 'Was blieb',
+  change: 'Danach',
   /** Welt-Beat der Heute-Station. */
   today: 'Heute',
 } as const;

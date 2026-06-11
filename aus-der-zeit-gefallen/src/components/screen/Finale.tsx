@@ -168,12 +168,12 @@ export function Finale({
         )}
       </AnimatePresence>
 
-      {/* Die Schlusszeile bleibt, waehrend sich das Bild zur Galerie weitet. */}
-      {runDone && (
+      {/* Der eine, letzte Satz des Stuecks. Nur unter der Galerie, nur einmal. */}
+      {gallery && (
         <motion.p
           initial={{ opacity: 0, y: reduced ? 0 : 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: reduced ? 0.4 : 2.4, ease: 'easeOut' }}
+          transition={{ duration: reduced ? 0.4 : 2.4, ease: 'easeOut', delay: reduced ? 0.3 : 1.4 }}
           className="mt-[5svh] font-serif"
           style={{
             color: 'var(--ink-soft)',
@@ -193,7 +193,7 @@ export function Finale({
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: reduced ? 0.4 : 1.6, ease: 'easeOut', delay: reduced ? 0.4 : 2.2 }}
+          transition={{ duration: reduced ? 0.4 : 1.6, ease: 'easeOut', delay: reduced ? 0.6 : 4 }}
           className="mt-[5svh]"
         >
           <Button variant="ghost" onClick={onRestart}>

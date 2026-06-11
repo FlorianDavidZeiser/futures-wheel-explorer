@@ -63,7 +63,7 @@ export function Gallery({ reduced, profession }: { reduced: boolean; profession:
           }}
         >
           <div
-            className="w-full"
+            className="relative w-full"
             style={{
               aspectRatio: '800 / 460',
               boxShadow: c.you ? '0 0 0 1px color-mix(in srgb, var(--glow) 55%, transparent)' : undefined,
@@ -71,6 +71,16 @@ export function Gallery({ reduced, profession }: { reduced: boolean; profession:
             }}
           >
             <SceneFrame patina={c.you ? 0.5 : 0.62}>{c.scene}</SceneFrame>
+            {/* Die eigene Vitrine, das Fragezeichen als einzige offene Stelle. */}
+            {c.you && (
+              <span
+                aria-hidden
+                className="pointer-events-none absolute inset-0 flex items-center justify-center font-serif"
+                style={{ color: 'var(--glow)', fontSize: 'clamp(1.1rem, 3vw, 1.7rem)', opacity: 0.85 }}
+              >
+                ?
+              </span>
+            )}
           </div>
           <span
             className="mt-[1.2svh] font-sans tabular-nums"
