@@ -18,7 +18,7 @@ export function SceneBox({
       style={{
         maxWidth: '40rem',
         aspectRatio: '800 / 460',
-        maxHeight: '38svh',
+        maxHeight: '34svh',
         margin: '0 auto',
       }}
     >

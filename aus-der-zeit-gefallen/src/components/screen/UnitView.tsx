@@ -3,6 +3,7 @@ import type { CSSProperties } from 'react';
 import { palettes, paletteVars } from '../../styles/palettes';
 import { stations, headings, type StationId } from '../../data/content';
 import { SceneBox } from './SceneBox';
+import { ScrollText } from '../ui/ScrollText';
 import { LamplighterScene } from '../scenes/LamplighterScene';
 import { KnockerUpScene } from '../scenes/KnockerUpScene';
 import { SwitchboardScene } from '../scenes/SwitchboardScene';
@@ -27,21 +28,23 @@ const headingStyle: CSSProperties = {
   letterSpacing: '0.01em',
 };
 
+// Welt-Einstieg und Geschichte liegen nah beieinander, der Groessensprung ist weg.
+// Der Einstieg ist nur eine Spur groesser und heller, die Geschichte gut lesbar.
 const worldStyle: CSSProperties = {
   color: 'var(--ink)',
-  fontSize: 'clamp(1.2rem, 2.3vw, 1.7rem)',
+  fontSize: 'clamp(1.12rem, 1.9vw, 1.4rem)',
   lineHeight: 1.7,
   fontWeight: 300,
-  maxWidth: '36rem',
+  maxWidth: '34rem',
   textWrap: 'pretty',
 };
 
 const proseStyle: CSSProperties = {
   color: 'var(--ink-soft)',
-  fontSize: 'clamp(1.02rem, 1.5vw, 1.18rem)',
-  lineHeight: 1.8,
+  fontSize: 'clamp(1.08rem, 1.6vw, 1.26rem)',
+  lineHeight: 1.75,
   fontWeight: 300,
-  maxWidth: '38rem',
+  maxWidth: '36rem',
   textWrap: 'pretty',
 };
 
@@ -102,35 +105,33 @@ export function UnitView({
 
   return (
     <div
-      className="flex h-full w-full flex-col items-center justify-center px-6 pt-[12svh] pb-[7svh]"
+      className="flex h-full w-full flex-col items-center justify-center px-6 pt-[10svh] pb-[6svh]"
       style={paletteVars(palette)}
     >
       <SceneBox patina={unit.patina}>
         <Scene palette={palette} reduced={reduced} active beat={beat} />
       </SceneBox>
 
-      <div
-        className="no-scrollbar mt-[4svh] flex w-full max-w-2xl flex-col items-center text-center"
-        data-scroll
-        style={{ maxHeight: '44svh', overflowY: 'auto' }}
-      >
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={`${unit.key}-${beat}`}
-            initial={{ opacity: 0, y: reduced ? 0 : 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: reduced ? 0 : -6 }}
-            transition={small}
-            className="flex w-full flex-col items-center"
-          >
-            <h2 className="mb-[2.4svh] font-serif" style={headingStyle}>
-              {heading}
-            </h2>
-            <p className="font-serif" style={bodyIsWorld ? worldStyle : proseStyle}>
-              {body}
-            </p>
-          </motion.div>
-        </AnimatePresence>
+      <div className="mt-[3.5svh] w-full max-w-2xl">
+        <ScrollText maxHeight="46svh" reduced={reduced}>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`${unit.key}-${beat}`}
+              initial={{ opacity: 0, y: reduced ? 0 : 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: reduced ? 0 : -6 }}
+              transition={small}
+              className="flex w-full flex-col items-center text-center"
+            >
+              <h2 className="mb-[2.4svh] font-serif" style={headingStyle}>
+                {heading}
+              </h2>
+              <p className="font-serif" style={bodyIsWorld ? worldStyle : proseStyle}>
+                {body}
+              </p>
+            </motion.div>
+          </AnimatePresence>
+        </ScrollText>
       </div>
     </div>
   );
