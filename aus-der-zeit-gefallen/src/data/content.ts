@@ -143,6 +143,16 @@ export const outroActions = {
   again: 'noch einmal',
 } as const;
 
+// Der Epilog, der echte letzte Akkord. Beobachtet und fragt, doziert nie. Die
+// Frage am Ende bleibt offen stehen, kein Eingabefeld, kein Call to Action.
+export const epilog = {
+  intro: 'Vier Berufe. Jeder bestand aus einer einzigen Tätigkeit.',
+  // Die Verben einzeln, damit sie nacheinander einblenden, die langsamste Zeile.
+  verbs: ['Anzünden.', 'Wecken.', 'Verbinden.', 'Rechnen.'],
+  middle: 'Als die eine Tätigkeit ersetzbar wurde, endete der Beruf.',
+  question: 'Woraus besteht deine Arbeit?',
+} as const;
+
 // Die mitwandernden Ueberschriften erzaehlen schon den Dreischritt: Welt (Ort und
 // Jahr), Mensch (der Beruf), Wandel (ein knappes Wort, das das Verschwinden nur
 // leise andeutet, nie erklaert, was abloeste).

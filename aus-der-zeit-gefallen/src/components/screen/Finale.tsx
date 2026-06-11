@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useTransform, type MotionValue } from 'framer-motion';
 import { palettes, paletteVars } from '../../styles/palettes';
-import { turn, closingLine, outroActions, headings } from '../../data/content';
+import { turn, closingLine, headings } from '../../data/content';
 import { SceneFrame } from '../station/SceneFrame';
 import { TodayScene } from '../scenes/TodayScene';
 import { SilhouetteScene } from '../scenes/SilhouetteScene';
 import { Gallery } from './Gallery';
-import { Button } from '../ui/Button';
+import { Epilog } from './Epilog';
 
 const sceneBox = {
   width: '100%',
@@ -17,9 +17,10 @@ const sceneBox = {
 } as const;
 
 // Der Schluss als ein durchgehender Fluss. Erst das gewoehnliche Heute, das
-// sichere Scharnier, dann die langsame Ueberblendung zur leeren Silhouette mit dem
-// eigenen Beruf, dann laeuft die Zeit darueber hinweg. Am Ende reiht sich die
-// eigene Vitrine neben die vier verschwundenen.
+// sichere Scharnier, dann die Ueberblendung zur leeren Silhouette mit dem eigenen
+// Beruf, dann laeuft die Zeit darueber hinweg. Die eigene Vitrine reiht sich neben
+// die vier verschwundenen, darunter der eine Satz. Und zuletzt, von selbst, der
+// Epilog, der echte letzte Akkord.
 export function Finale({
   reduced,
   profession,
@@ -42,7 +43,7 @@ export function Finale({
   });
   const markOpacity = useTransform(heutePatina, (v) => 0.2 + 0.8 * Math.max(0, Math.min(1, v)));
 
-  // Die Galerie oeffnet sich erst nach einer Stille, wenn die Schlusszeile wirkt.
+  // Die Galerie oeffnet sich erst nach einer Stille, wenn der Satz wirkt.
   const [gallery, setGallery] = useState(false);
   useEffect(() => {
     if (!runDone) {
@@ -52,6 +53,18 @@ export function Finale({
     const t = window.setTimeout(() => setGallery(true), reduced ? 700 : 3600);
     return () => window.clearTimeout(t);
   }, [runDone, reduced]);
+
+  // Nach dem Laternenanzuender-Satz eine Stille, dann blendet der Epilog von
+  // selbst ein, ohne Klick.
+  const [epilog, setEpilog] = useState(false);
+  useEffect(() => {
+    if (!gallery) {
+      setEpilog(false);
+      return;
+    }
+    const t = window.setTimeout(() => setEpilog(true), reduced ? 1400 : 8000);
+    return () => window.clearTimeout(t);
+  }, [gallery, reduced]);
 
   const small = reduced
     ? { duration: 0.3, ease: 'easeOut' as const }
@@ -74,7 +87,6 @@ export function Finale({
           >
             <div style={sceneBox}>
               <SceneFrame patina={heutePatina}>
-                {/* Hebel 1, das sichere Heute weicht langsam der leeren Silhouette. */}
                 <motion.div
                   className="absolute inset-0"
                   initial={false}
@@ -155,52 +167,48 @@ export function Finale({
               )}
             </div>
           </motion.div>
-        ) : (
+        ) : !epilog ? (
           <motion.div
             key="gallery"
             className="flex w-full flex-col items-center"
             initial={{ opacity: 0, scale: reduced ? 1 : 0.94 }}
             animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, transition: { duration: reduced ? 0.3 : 1.2 } }}
             transition={{ duration: reduced ? 0.4 : 1.4, ease: 'easeOut' }}
           >
             <Gallery reduced={reduced} profession={profession} />
+
+            {/* Der eine, letzte Satz unter der Galerie. */}
+            <motion.p
+              initial={{ opacity: 0, y: reduced ? 0 : 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: reduced ? 0.4 : 2.4, ease: 'easeOut', delay: reduced ? 0.3 : 1.4 }}
+              className="mt-[5svh] font-serif"
+              style={{
+                color: 'var(--ink-soft)',
+                fontSize: 'clamp(1.1rem, 1.9vw, 1.4rem)',
+                lineHeight: 1.6,
+                fontWeight: 300,
+                maxWidth: '34rem',
+                textAlign: 'center',
+                textWrap: 'pretty',
+              }}
+            >
+              {closingLine}
+            </motion.p>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="epilog"
+            className="flex w-full flex-col items-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: reduced ? 0.4 : 1.6, ease: 'easeOut' }}
+          >
+            <Epilog reduced={reduced} onRestart={onRestart} />
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Der eine, letzte Satz des Stuecks. Nur unter der Galerie, nur einmal. */}
-      {gallery && (
-        <motion.p
-          initial={{ opacity: 0, y: reduced ? 0 : 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: reduced ? 0.4 : 2.4, ease: 'easeOut', delay: reduced ? 0.3 : 1.4 }}
-          className="mt-[5svh] font-serif"
-          style={{
-            color: 'var(--ink-soft)',
-            fontSize: 'clamp(1.1rem, 1.9vw, 1.4rem)',
-            lineHeight: 1.6,
-            fontWeight: 300,
-            maxWidth: '34rem',
-            textAlign: 'center',
-            textWrap: 'pretty',
-          }}
-        >
-          {closingLine}
-        </motion.p>
-      )}
-
-      {gallery && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: reduced ? 0.4 : 1.6, ease: 'easeOut', delay: reduced ? 0.6 : 4 }}
-          className="mt-[5svh]"
-        >
-          <Button variant="ghost" onClick={onRestart}>
-            {outroActions.again}
-          </Button>
-        </motion.div>
-      )}
     </div>
   );
 }
