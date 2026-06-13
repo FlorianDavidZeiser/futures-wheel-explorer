@@ -62,6 +62,8 @@ export function App() {
   const heutePatina = useMotionValue(0);
   // Hebel 7, der dunkle Korridor zwischen den Saelen.
   const corridor = useMotionValue(0);
+  // Impuls auf die Jahreszahl beim Hochzaehlen, damit man den Sprung sieht.
+  const yearPulse = useMotionValue(0);
   const firstU = useRef(true);
   const background = useMotionTemplate`linear-gradient(180deg, ${bg} 0%, ${bgDeep} 100%)`;
 
@@ -94,7 +96,11 @@ export function App() {
     }
     if (reduced) return;
     const c = animate(corridor, [0, 0.62, 0], { duration: 0.78, times: [0, 0.42, 1], ease: 'easeInOut' });
-    return () => c.stop();
+    const p = animate(yearPulse, [0, 1, 0], { duration: 1.2, times: [0, 0.45, 1], ease: 'easeOut' });
+    return () => {
+      c.stop();
+      p.stop();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [u]);
 
@@ -299,7 +305,7 @@ export function App() {
 
       <motion.div aria-hidden className="pointer-events-none fixed inset-0 z-20 bg-black" style={{ opacity: corridor }} />
 
-      <YearHud value={yearRounded} opacity={hudOpacity} color={ink} />
+      <YearHud value={yearRounded} opacity={hudOpacity} color={ink} pulse={yearPulse} />
       <Forward dir="next" onClick={next} visible={!atEnd} color={ink} reduced={reduced} />
       <Forward dir="prev" onClick={prev} visible={u > 0 || b > 0} color={ink} reduced={reduced} />
 

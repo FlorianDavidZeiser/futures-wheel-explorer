@@ -49,7 +49,7 @@ export function IntroB({
               className="font-sans"
               style={{ color: 'var(--ink-faint)', fontSize: '0.66rem', letterSpacing: '0.26em', textTransform: 'uppercase' }}
             >
-              Tätigkeit
+              Arbeit
             </span>
             <div
               className="w-full"

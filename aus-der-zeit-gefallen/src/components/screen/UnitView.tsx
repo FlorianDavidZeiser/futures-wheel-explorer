@@ -32,7 +32,7 @@ const headingStyle: CSSProperties = {
 // Der Einstieg ist nur eine Spur groesser und heller, die Geschichte gut lesbar.
 const worldStyle: CSSProperties = {
   color: 'var(--ink)',
-  fontSize: 'clamp(1.12rem, 1.9vw, 1.4rem)',
+  fontSize: 'clamp(1.1rem, 1.8vw, 1.34rem)',
   lineHeight: 1.7,
   fontWeight: 300,
   maxWidth: '34rem',
@@ -41,8 +41,8 @@ const worldStyle: CSSProperties = {
 
 const proseStyle: CSSProperties = {
   color: 'var(--ink-soft)',
-  fontSize: 'clamp(1.08rem, 1.6vw, 1.26rem)',
-  lineHeight: 1.75,
+  fontSize: 'clamp(1.05rem, 1.5vw, 1.2rem)',
+  lineHeight: 1.72,
   fontWeight: 300,
   maxWidth: '36rem',
   textWrap: 'pretty',
@@ -105,15 +105,15 @@ export function UnitView({
 
   return (
     <div
-      className="flex h-full w-full flex-col items-center justify-center px-6 pt-[10svh] pb-[6svh]"
+      className="flex h-full w-full flex-col items-center justify-start px-6 pt-[12svh] pb-[6svh]"
       style={paletteVars(palette)}
     >
       <SceneBox patina={unit.patina}>
         <Scene palette={palette} reduced={reduced} active beat={beat} />
       </SceneBox>
 
-      <div className="mt-[3.5svh] w-full max-w-2xl">
-        <ScrollText maxHeight="46svh" reduced={reduced}>
+      <div className="mt-[3svh] w-full max-w-2xl">
+        <ScrollText maxHeight="50svh" reduced={reduced}>
           <AnimatePresence mode="wait">
             <motion.div
               key={`${unit.key}-${beat}`}

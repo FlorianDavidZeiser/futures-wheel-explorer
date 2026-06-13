@@ -12,7 +12,7 @@ export const intro = {
   quote: 'Alles fließt.',
   lead:
     'Nichts bleibt, wie es war. Was heute selbstverständlich ist, war gestern undenkbar. Und ist morgen vergessen.',
-  question: 'Bevor es losgeht, was ist deine aktuelle Tätigkeit?',
+  question: 'Als was arbeitest du gerade?',
   start: 'Beginnen',
   /** Sehr dezenter Hinweis am Ende von Screen A, um selbst weiterzugehen. */
   forward: 'weiter',
@@ -56,7 +56,7 @@ export const stations: StationContent[] = [
       'Kohlenrauch hängt über den Dächern. Pferdehufe klackern auf nassem Pflaster. Und nirgends auf der Welt brennt auch nur eine elektrische Lampe. Wenn die Sonne sinkt, fällt die Stadt zurück ins Schwarze, Gasse um Gasse, bis nichts mehr bleibt. Nur der Mond. Wer Licht will, muss es tragen. Von Hand.',
     profession: 'Der Laternenanzünder',
     story:
-      'Dreißig Minuten nach Sonnenuntergang geht er los. Immer dieselbe Runde. Laterne für Laterne, die Stange gehoben, ein Zischen, ein Aufflammen, weiter. Hinter ihm glüht eine Kette aus Licht in der blauen Luft, und die Leute am Fenster stellen ihre Uhren nach ihm. Sein Vater ist die Runde gegangen. Er geht die Runde. Sein Sohn wird die Runde gehen. Das ist ausgemacht. Bei Morgengrauen kehrt er zurück und nimmt das Licht wieder mit.',
+      'Dreißig Minuten nach Sonnenuntergang geht er los. Immer dieselbe Runde. Laterne für Laterne, die Stange gehoben, ein Zischen, ein Aufflammen, weiter. Hinter ihm glüht eine Kette aus Licht in der blauen Luft, und die Leute am Fenster stellen ihre Uhren nach ihm. Sein Vater ist die Runde gegangen. Er geht die Runde. Sein Sohn wird die Runde gehen. Das ist ausgemacht. Bei Morgengrauen kehrt er zurück und löscht sie wieder, eine nach der anderen.',
     aftermath:
       'Nach und nach gehen die Laternen von selbst an. Erst eine Straße, dann die nächste, dann die ganze Stadt, auf einen Schalter hin, den draußen niemand sieht. Die Runde bleibt liegen. Der Sohn, der sie gehen sollte, sucht sich etwas anderes. Die Stange mit dem Haken lehnt noch jahrelang in einem Schuppen. Bis keiner mehr weiß, wofür der Haken war.',
   },
@@ -126,7 +126,7 @@ export const turn = {
   /** An der Stelle, wo bei den anderen die Andeutung stand, nur ein Fragezeichen. */
   mark: '?',
   /** Beruf, wenn der Nutzer nichts eingegeben hat. */
-  fallbackProfession: 'deine Tätigkeit',
+  fallbackProfession: 'deine Arbeit',
   // Die Heute-Zeile an der Stelle des Welt-Einstiegs der fuenften Station. Bewusst
   // universell, kein Berufsbild, benennt nur das Gefuehl der Selbstverstaendlichkeit.
   // Spricht keine Lehre aus, die Verbindung stellt die Struktur her, nicht der Text.

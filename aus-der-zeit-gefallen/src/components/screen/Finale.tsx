@@ -12,7 +12,7 @@ const sceneBox = {
   width: '100%',
   maxWidth: '40rem',
   aspectRatio: '800 / 460',
-  maxHeight: '38svh',
+  maxHeight: '30svh',
   margin: '0 auto',
 } as const;
 
@@ -74,7 +74,7 @@ export function Finale({
 
   return (
     <div
-      className="flex h-full w-full flex-col items-center justify-center px-6 pt-[12svh] pb-[7svh]"
+      className="flex h-full w-full flex-col items-center justify-start px-6 pt-[12svh] pb-[6svh]"
       style={paletteVars(palettes.today)}
     >
       <AnimatePresence mode="wait">
