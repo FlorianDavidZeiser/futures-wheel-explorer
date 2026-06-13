@@ -28,6 +28,7 @@ export function Finale({
   heutePatina,
   runDone,
   onRestart,
+  onEpilog,
 }: {
   reduced: boolean;
   profession: string;
@@ -35,6 +36,7 @@ export function Finale({
   heutePatina: MotionValue<number>;
   runDone: boolean;
   onRestart: () => void;
+  onEpilog: (active: boolean) => void;
 }) {
   const name = profession.trim() || turn.fallbackProfession;
   const agedFilter = useTransform(heutePatina, (v) => {
@@ -65,6 +67,12 @@ export function Finale({
     const t = window.setTimeout(() => setEpilog(true), reduced ? 1400 : 8000);
     return () => window.clearTimeout(t);
   }, [gallery, reduced]);
+
+  // Im Epilog blendet die Jahreszahl oben aus, der Screen wird zeitlos.
+  useEffect(() => {
+    onEpilog(epilog);
+    return () => onEpilog(false);
+  }, [epilog, onEpilog]);
 
   const small = reduced
     ? { duration: 0.3, ease: 'easeOut' as const }
@@ -183,15 +191,17 @@ export function Finale({
               initial={{ opacity: 0, y: reduced ? 0 : 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: reduced ? 0.4 : 2.4, ease: 'easeOut', delay: reduced ? 0.3 : 1.4 }}
-              className="mt-[5svh] font-serif"
+              className="mt-[6svh] font-serif"
               style={{
-                color: 'var(--ink-soft)',
-                fontSize: 'clamp(1.1rem, 1.9vw, 1.4rem)',
-                lineHeight: 1.6,
+                color: 'var(--ink)',
+                fontSize: 'clamp(1.3rem, 2.4vw, 1.78rem)',
+                lineHeight: 1.5,
                 fontWeight: 300,
-                maxWidth: '34rem',
+                letterSpacing: '0.01em',
+                maxWidth: '32rem',
                 textAlign: 'center',
                 textWrap: 'pretty',
+                textShadow: '0 0 30px color-mix(in srgb, var(--glow) 16%, transparent)',
               }}
             >
               {closingLine}

@@ -35,6 +35,8 @@ export function App() {
   // Die Stufe der sich selbst entfaltenden Heute-Sequenz: 0 Heute-Zeile,
   // 1 der eigene Beruf, 2 das Hochlaufen der Zeit. Kein Klick, nur Zeit.
   const [heuteStage, setHeuteStage] = useState(0);
+  // Im Epilog blendet die Jahreszahl aus, der Screen wird zeitlos.
+  const [epilogActive, setEpilogActive] = useState(false);
   const [invite, setInvite] = useState(true);
   const uRef = useRef(0);
   const bRef = useRef(0);
@@ -80,12 +82,14 @@ export function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [u, reduced]);
 
-  // Die Jahreszahl ist sichtbar, sobald der Vorhang gewichen ist.
+  // Die Jahreszahl ist sichtbar, sobald der Vorhang gewichen ist, und weicht im
+  // Epilog wieder, damit der letzte Screen zeitlos wird.
   useEffect(() => {
-    const ho = animate(hudOpacity, unit.year != null ? 1 : 0, { duration: reduced ? 0 : 0.7, ease: 'easeOut' });
+    const show = unit.year != null && !epilogActive;
+    const ho = animate(hudOpacity, show ? 1 : 0, { duration: reduced ? 0 : 0.9, ease: 'easeOut' });
     return () => ho.stop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [u, reduced]);
+  }, [u, epilogActive, reduced]);
 
   // Hebel 7, beim grossen Uebergang ein kurzer Gang durchs Dunkle, wie zwischen
   // zwei Museumssaelen. Nur beim Stationswechsel, nicht bei den Beats.
@@ -176,7 +180,7 @@ export function App() {
         });
         // 8. Halt bei 2070, Stille. 9. Dann die Schlusszeile.
         timers.push(window.setTimeout(() => setRunDone(true), RUN_MS + 1500));
-      }, 2600 + 3500)
+      }, 2600 + 5500)
     );
 
     return () => {
@@ -305,7 +309,7 @@ export function App() {
 
       <motion.div aria-hidden className="pointer-events-none fixed inset-0 z-20 bg-black" style={{ opacity: corridor }} />
 
-      <YearHud value={yearRounded} opacity={hudOpacity} color={ink} pulse={yearPulse} />
+      <YearHud value={yearRounded} opacity={hudOpacity} color={ink} pulse={yearPulse} reduced={reduced} />
       <Forward dir="next" onClick={next} visible={!atEnd} color={ink} reduced={reduced} />
       <Forward dir="prev" onClick={prev} visible={u > 0 || b > 0} color={ink} reduced={reduced} />
 
@@ -342,6 +346,7 @@ export function App() {
               onRestart={restart}
               heutePatina={heutePatina}
               runDone={runDone}
+              onEpilog={setEpilogActive}
             />
           </motion.div>
         </AnimatePresence>

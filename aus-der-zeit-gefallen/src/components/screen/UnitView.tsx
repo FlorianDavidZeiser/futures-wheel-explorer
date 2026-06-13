@@ -58,6 +58,7 @@ interface UnitViewProps {
   onRestart: () => void;
   heutePatina: MotionValue<number>;
   runDone: boolean;
+  onEpilog: (active: boolean) => void;
 }
 
 // Eine Unit, ein Ort. Die Ueberschrift wandert mit und erzaehlt den Dreischritt,
@@ -72,6 +73,7 @@ export function UnitView({
   onRestart,
   heutePatina,
   runDone,
+  onEpilog,
 }: UnitViewProps) {
   if (unit.kind === 'introA') return <IntroA reduced={reduced} onNext={onNext} />;
   if (unit.kind === 'introB') {
@@ -86,6 +88,7 @@ export function UnitView({
         heutePatina={heutePatina}
         runDone={runDone}
         onRestart={onRestart}
+        onEpilog={onEpilog}
       />
     );
   }
@@ -113,7 +116,7 @@ export function UnitView({
       </SceneBox>
 
       <div className="mt-[3svh] w-full max-w-2xl">
-        <ScrollText maxHeight="50svh" reduced={reduced}>
+        <ScrollText maxHeight="50svh">
           <AnimatePresence mode="wait">
             <motion.div
               key={`${unit.key}-${beat}`}
