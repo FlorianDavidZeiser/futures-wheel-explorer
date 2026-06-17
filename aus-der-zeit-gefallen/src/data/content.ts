@@ -73,7 +73,7 @@ export const stations: StationContent[] = [
       'Die Fabriksirene heult über die Dächer und duldet keine Verspätung. Eine Uhr kostet mehr, als eine Woche Arbeit einbringt. Das Radio gibt es noch nicht. Wie also weckt man eine ganze Stadt voller Arbeiter auf die Minute?',
     profession: 'Der Weckdienst',
     story:
-      'Mit einem Rohr und einer Handvoll getrockneter Erbsen geht sie durch die nassen Gassen. Sie schießt sie ans Glas, dass es klackt, bis oben einer ans Fenster tritt und nickt. Erst dann geht sie weiter, nicht eher. Sechs Pence die Woche. Ein alter Mann drei Meilen weiter macht es mit einer Angelrute. Ihre Erbsen aber treffen sicherer. Sie weckt die halbe Stadt. Ein gutes Geschäft, denkt sie, solange Menschen zur Schicht müssen.',
+      'Neun Uhr ins Bett, halb drei wieder heraus. Außer sonntags. Mit einem Rohr und einer Handvoll getrockneter Erbsen geht sie durch die nassen Gassen. Sie schießt sie ans Glas, dass es klackt, bis oben einer ans Fenster tritt und nickt. Erst dann geht sie weiter, nicht eher. Sechs Pence die Woche. Ein alter Mann drei Meilen weiter macht es mit einer Angelrute. Ihre Erbsen aber treffen sicherer. Sie weckt die halbe Stadt. Ein gutes Geschäft, denkt sie, solange Menschen zur Schicht müssen.',
     aftermath:
       'Auf einmal steht in den Schlafzimmern ein kleines Ding mit zwei Glocken obendrauf. Es rasselt von allein. Es kostet einmal, was sie in Wochen verdient. Und kostet dann nie wieder. Ihre Runde wird kürzer. Erst dieses Fenster, dann jenes. Niemand wartet mehr auf die Erbse. Am Ende ist sie eine der Letzten. Bis dann niemand mehr morgens weckend durch die Gassen geht.',
   },
