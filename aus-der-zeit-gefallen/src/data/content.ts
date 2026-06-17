@@ -53,12 +53,12 @@ export const stations: StationContent[] = [
     // malt. Keine Jahreszahl am Satzanfang. PLATZHALTER, vom Auftraggeber final.
     worldEntryForm: 'bild',
     worldEntry:
-      'Kohlenrauch hängt über den Dächern. Pferdehufe klackern auf nassem Pflaster. Und nirgends auf der Welt brennt auch nur eine elektrische Lampe. Wenn die Sonne sinkt, fällt die Stadt zurück ins Schwarze, Gasse um Gasse, bis nichts mehr bleibt. Nur der Mond. Wer Licht will, muss es tragen. Von Hand.',
-    profession: 'Der Laternenanzünder',
+      'Kohlenrauch hängt über den Dächern. Pferdehufe klackern auf nassem Pflaster. Und nirgends auf der Welt brennt auch nur eine elektrische Lampe. Wenn die Sonne sinkt, fällt die Stadt zurück ins Schwarze. Gasse um Gasse. Bis nichts mehr bleibt. Nur der Mondschein. Wer Licht will, muss es tragen.',
+    profession: 'Der Anzünder',
     story:
-      'Dreißig Minuten nach Sonnenuntergang geht er los. Immer dieselbe Runde. Laterne für Laterne, die Stange gehoben, ein Zischen, ein Aufflammen, weiter. Hinter ihm glüht eine Kette aus Licht in der blauen Luft, und die Leute am Fenster stellen ihre Uhren nach ihm. Sein Vater ist die Runde gegangen. Er geht die Runde. Sein Sohn wird die Runde gehen. Das ist ausgemacht. Bei Morgengrauen kehrt er zurück und löscht sie wieder, eine nach der anderen.',
+      'Dreißig Minuten nach Sonnenuntergang geht er los. Immer dieselbe Runde. Laterne für Laterne, die Stange gehoben, ein Zischen, ein Aufflammen, weiter. Hinter ihm glüht eine Kette aus Licht in der blauen Luft, und die Leute am Fenster stellen ihre Uhren nach ihm. Sein Vater ist die Runde gegangen. Er geht die Runde. Sein Sohn wird die Runde gehen. Das ist ausgemacht. Im Morgengrauen kehrt er zurück und löscht das Licht wieder, eine Lampe nach der anderen.',
     aftermath:
-      'Nach und nach gehen die Laternen von selbst an. Erst eine Straße, dann die nächste, dann die ganze Stadt, auf einen Schalter hin, den draußen niemand sieht. Die Runde bleibt liegen. Der Sohn, der sie gehen sollte, sucht sich etwas anderes. Die Stange mit dem Haken lehnt noch jahrelang in einem Schuppen. Bis keiner mehr weiß, wofür der Haken war.',
+      'Nach und nach gehen die Laternen von selbst an. Erst eine Straße, dann die nächste, dann die ganze Stadt. Auf einen Schalter hin, den draußen niemand sieht. Die Runde bleibt liegen. Der Sohn, der sie gehen sollte, sucht sich etwas anderes. Die Stange mit dem Haken lehnt noch jahrelang in einem Schuppen. Bis keiner mehr weiß, wofür der Haken war.',
   },
   {
     id: 'knockerup',
@@ -71,9 +71,9 @@ export const stations: StationContent[] = [
       'Die Fabriksirene heult über die Dächer und duldet keine Verspätung. Eine Uhr kostet mehr, als eine Woche Arbeit einbringt. Das Radio gibt es noch nicht. Wie also weckt man eine ganze Stadt voller Arbeiter auf die Minute?',
     profession: 'Der Weckdienst',
     story:
-      'Außer sonntags ist sie um drei auf den Beinen. Ein Rohr, eine Handvoll getrockneter Erbsen, und los durch die nassen Gassen. Sie schießt sie ans Glas, dass es klackt, bis oben einer ans Fenster tritt und nickt. Erst dann geht sie weiter, nicht eher. Sechs Pence die Woche. Der Alte drei Meilen weiter macht es mit einer Angelrute, aber ihre Erbsen treffen sicherer. Sie weckt die halbe Straße. Sie selbst weckt niemand. Ein gutes Geschäft, denkt sie, solange Menschen zur Schicht müssen.',
+      'Mit einem Rohr und einer Handvoll getrockneter Erbsen geht sie durch die nassen Gassen. Sie schießt sie ans Glas, dass es klackt, bis oben einer ans Fenster tritt und nickt. Erst dann geht sie weiter, nicht eher. Sechs Pence die Woche. Ein alter Mann drei Meilen weiter macht es mit einer Angelrute. Ihre Erbsen aber treffen sicherer. Sie weckt die halbe Stadt. Ein gutes Geschäft, denkt sie, solange Menschen zur Schicht müssen.',
     aftermath:
-      'Dann steht in den Schlafzimmern ein kleines Ding mit zwei Glocken obendrauf. Es rasselt von allein. Es kostet einmal, was sie in Wochen verdient. Und kostet dann nie wieder. Ihre Runde wird kürzer. Erst dieses Fenster, dann jenes. Niemand wartet mehr auf die Erbse. Am Ende ist sie eine der Letzten. Dann macht es keiner mehr.',
+      'Auf einmal steht in den Schlafzimmern ein kleines Ding mit zwei Glocken obendrauf. Es rasselt von allein. Es kostet einmal, was sie in Wochen verdient. Und kostet dann nie wieder. Ihre Runde wird kürzer. Erst dieses Fenster, dann jenes. Niemand wartet mehr auf die Erbse. Am Ende ist sie eine der Letzten. Bis dann niemand mehr morgens weckend durch die Gassen geht.',
   },
   {
     id: 'switchboard',
@@ -83,12 +83,12 @@ export const stations: StationContent[] = [
     // Zeitanker eingewoben, das Jahr erst danach. PLATZHALTER, vom Auftraggeber final.
     worldEntryForm: 'szene',
     worldEntry:
-      'In den Wohnungen hängt ein neues Gerät an der Wand, aus Holz und Bakelit, und wer hineinspricht, kann eine Stimme vom anderen Ende der Stadt hören. Ein Wunder, das sich rasend verbreitet. Nur eines kann das Wunder nicht. Zwei Leitungen finden nie von allein zueinander.',
+      'In den Wohnungen hängt ein neues Gerät an der Wand, aus Holz und Bakelit. Wer hineinspricht, der kann eine Stimme vom anderen Ende der Stadt hören. Ein Wunder, das sich rasend verbreitet. Nur eines kann das Wunder nicht. Zwei Leitungen finden nie von allein zueinander.',
     profession: 'Das Fräulein vom Amt',
     story:
-      'Nummer bitte, sagt sie, hundertmal in der Stunde. Sie kennt keine Nummern, sie kennt Namen. Sie zieht den Stecker, sie verbindet zwei Menschen, sie hört den ersten Satz, sie zieht den nächsten. Schwarzes Kleid, kein Schmuck, an manchen Tagen rollt sie auf Rollschuhen ans Ende der Wand, damit es schneller geht. Durch ihre Hände läuft jedes Gespräch dieser Stadt. Ohne sie redet hier niemand mit niemandem.',
+      'Nummer bitte, sagt sie, hundertmal in der Stunde. Sie kennt keine Nummern, sie kennt Namen. Sie zieht den Stecker, sie verbindet zwei Menschen, sie hört den ersten Satz, sie zieht den nächsten. Schwarzes Kleid, kein Schmuck, an manchen Tagen rollt sie auf Rollschuhen ans Ende der Wand, damit es schneller geht. Durch ihre Hände läuft jedes Gespräch der Stadt. Ohne sie redet niemand mit niemandem.',
     aftermath:
-      'An einem Mittwoch im Oktober, halb zwei am Nachmittag, legt jemand einen Hebel um. Von da an stecken sich die Gespräche selbst. Sie steht auf, nimmt ihren Mantel, geht. Die Wand aus Kabeln verstummt. Und wenn heute eine Stimme vom Band darum bittet, in der Leitung zu bleiben, ist es fast immer eine Frauenstimme. Mehr ist von ihr geblieben.',
+      'An einem Mittwoch im Oktober, um halb zwei am Nachmittag, legt jemand einen Hebel um. Von da an stecken sich die Gespräche selbst. Sie steht auf, nimmt ihren Mantel, geht. Die Wand aus Kabeln verstummt. Und wenn heute eine Stimme vom Band darum bittet, in der Leitung zu bleiben, ist es fast immer eine Frauenstimme. Mehr ist von ihr geblieben.',
   },
   {
     id: 'computer',
@@ -98,12 +98,12 @@ export const stations: StationContent[] = [
     // vom Auftraggeber.
     worldEntryForm: 'fakt',
     worldEntry:
-      'Die Welt nach dem Krieg rechnet sich in die Zukunft. Düsenflugzeuge, Staudämme, bald der Griff nach dem Himmel. Jede Flugbahn, jede Brücke, jede Tabelle will berechnet sein, auf viele Stellen genau. Und es gibt nichts auf der Welt, das rechnet. Nur Menschen.',
+      'Die Welt nach dem Krieg rechnet sich in die Zukunft. Düsenflugzeuge, Staudämme, die Sterne zum Greifen nah. Dabei will jede Brücke, jede Tragfläche und jede Flugbahn exakt und auf viele Stellen genau berechnet sein. Und es gibt nichts auf der Welt, das rechnet, außer Menschen.',
     profession: 'Der menschliche Computer',
     story:
-      'Beruf, Computer. Werkzeug, Bleistift, Millimeterpapier, eine Rechenmaschine. Sie liest die Werte unter dem Mikroskop vom Graphen ab und trägt sie ein. Acht Stunden. Dieselbe Gleichung. Eine Flugbahn füllt sechs Notizbücher und dauert eine Woche. Ihre Zahlen entscheiden, ob die Rakete fliegt, und eine Zeit lang traut man ihnen mehr als der neuen Maschine im Nebenraum. Dann schreibt eine von ihnen das Programm für die Maschine. Den Namen Computer gibt sie damit ab.',
+      'Beruf: Computer. Werkzeug: Bleistift, Millimeterpapier und eine Rechenmaschine. Sie liest die Werte unter dem Mikroskop vom Graphen ab und trägt sie ein. Acht Stunden. Dieselbe Gleichung. Eine Flugbahn füllt sechs Notizbücher und dauert eine Woche. Ihre Zahlen entscheiden, ob eine Rakete fliegt oder nicht.',
     aftermath:
-      'Die Maschine im Nebenraum rechnet die Flugbahn in Stunden, nicht in Wochen. Sie ist genauer. Sie wird nicht müde. Sie hält nie inne. Der Saal leert sich, Tisch um Tisch. Was bleibt, ist das Wort. Computer, heute ein Gerät auf jedem Schreibtisch. Dass es einmal ein Mensch war, der so hieß, weiß kaum noch jemand.',
+      'Eine von ihnen schreibt das Programm für die Maschine im Nebenraum. Die Maschine rechnet die Flugbahn in Stunden, nicht in Wochen. Sie ist genauer. Sie wird nicht müde. Sie hält nie inne. Der Saal leert sich, Tisch um Tisch. Der Beruf verschwindet. Was bleibt, ist das Wort. Computer ist heute ein Gerät auf jedem Schreibtisch. Dass es einmal ein Mensch war, der so hieß, weiß kaum noch jemand.',
   },
 ];
 
