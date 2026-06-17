@@ -4,7 +4,9 @@
 // Frage, Szene, Fakt). Alle Geschichten in dritter Person. Der 2026-Text ist
 // bewusst universell und spricht keine Lehre aus.
 //
-// Regel: keine langen Gedankenstriche. Nur Bindestriche, Kommas, Punkte.
+// Regel: Gedankenstriche aeusserst sparsam. Genau einer im ganzen Stueck, bewusst
+// gesetzt (Langley, "das rechnet - ausser Menschen"). Sonst nur Bindestriche,
+// Kommas, Punkte. Einer ist gut, zehn sind schlecht.
 
 export const intro = {
   title: 'Aus der Zeit gefallen',
@@ -88,7 +90,7 @@ export const stations: StationContent[] = [
     story:
       'Nummer bitte, sagt sie, hundertmal in der Stunde. Sie kennt keine Nummern, sie kennt Namen. Sie zieht den Stecker, sie verbindet zwei Menschen, sie hört den ersten Satz, sie zieht den nächsten. Schwarzes Kleid, kein Schmuck, an manchen Tagen rollt sie auf Rollschuhen ans Ende der Wand, damit es schneller geht. Durch ihre Hände läuft jedes Gespräch der Stadt. Ohne sie redet niemand mit niemandem.',
     aftermath:
-      'An einem Mittwoch im Oktober, um halb zwei am Nachmittag, legt jemand einen Hebel um. Von da an stecken sich die Gespräche selbst. Sie steht auf, nimmt ihren Mantel, geht. Die Wand aus Kabeln verstummt. Und wenn heute eine Stimme vom Band darum bittet, in der Leitung zu bleiben, ist es fast immer eine Frauenstimme. Mehr ist von ihr geblieben.',
+      'An einem Mittwoch im Oktober, um halb zwei am Nachmittag, legt jemand einen Hebel um. Von da an stecken sich die Gespräche selbst. Sie steht auf, nimmt ihren Mantel, geht. Die Wand aus Kabeln verstummt. Und wenn heute eine Stimme vom Band darum bittet, in der Leitung zu bleiben, ist es fast immer eine Frauenstimme. Mehr ist von ihr nicht geblieben.',
   },
   {
     id: 'computer',
@@ -98,7 +100,7 @@ export const stations: StationContent[] = [
     // vom Auftraggeber.
     worldEntryForm: 'fakt',
     worldEntry:
-      'Die Welt nach dem Krieg rechnet sich in die Zukunft. Düsenflugzeuge, Staudämme, die Sterne zum Greifen nah. Dabei will jede Brücke, jede Tragfläche und jede Flugbahn exakt und auf viele Stellen genau berechnet sein. Und es gibt nichts auf der Welt, das rechnet, außer Menschen.',
+      'Die Welt nach dem Krieg rechnet sich in die Zukunft. Düsenflugzeuge, Staudämme, die Sterne zum Greifen nah. Dabei will jede Brücke, jede Tragfläche und jede Flugbahn exakt und auf viele Stellen genau berechnet sein. Und es gibt nichts auf der Welt, das rechnet – außer Menschen.',
     profession: 'Der menschliche Computer',
     story:
       'Beruf: Computer. Werkzeug: Bleistift, Millimeterpapier und eine Rechenmaschine. Sie liest die Werte unter dem Mikroskop vom Graphen ab und trägt sie ein. Acht Stunden. Dieselbe Gleichung. Eine Flugbahn füllt sechs Notizbücher und dauert eine Woche. Ihre Zahlen entscheiden, ob eine Rakete fliegt oder nicht.',
